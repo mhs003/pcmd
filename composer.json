@@ -1,0 +1,35 @@
+{
+    "name": "pcmd/pcmd",
+    "description": "A portable, environment-aware command line toolkit for PHP developers.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pcmd\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pcmd\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/pcmd"
+    ],
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse",
+        "check": ["@test", "@analyse"]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}
