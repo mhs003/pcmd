@@ -94,24 +94,13 @@ final class CommandExecutor
     private function renderException(\Throwable $e, Context $context): void
     {
         $debug = $context->terminal()->isDebug();
-        $laravel = $context->laravel();
 
         if ($debug) {
             $context->error(\get_class($e) . ': ' . $e->getMessage());
             $context->line('  File: ' . $e->getFile() . ':' . $e->getLine());
             $context->line('');
 
-            if ($laravel !== null && method_exists($e, 'getSql')) {
-                $context->line('SQL: ' . $e->getSql());
-
-                $bindings = $e->getBindings();
-
-                if ($bindings !== []) {
-                    $context->line('Bindings: ' . json_encode($bindings, JSON_UNESCAPED_SLASHES));
-                }
-
-                $context->line('');
-            }
+            $this->renderSqlContext($e, $context);
 
             $context->line('Stack trace:');
             $trace = $e->getTrace();
@@ -119,9 +108,7 @@ final class CommandExecutor
             foreach ($trace as $i => $frame) {
                 $file = $frame['file'] ?? '[internal]';
                 $line = $frame['line'] ?? 0;
-                $call = $frame['class'] ?? '';
-                $call .= $frame['type'] ?? '';
-                $call .= $frame['function'] ?? '';
+                $call = ($frame['class'] ?? '') . ($frame['type'] ?? '') . $frame['function'];
 
                 $context->line('  #' . $i . ' ' . $file . ':' . $line . '  ' . $call);
 
@@ -133,5 +120,34 @@ final class CommandExecutor
         } else {
             $context->error($e->getMessage());
         }
+    }
+
+    private function renderSqlContext(\Throwable $e, Context $context): void
+    {
+        if ($context->laravel() === null) {
+            return;
+        }
+
+        if (!method_exists($e, 'getSql')) {
+            return;
+        }
+
+        $sql = $e->getSql();
+
+        if (!is_string($sql)) {
+            return;
+        }
+
+        $context->line('SQL: ' . $sql);
+
+        if (method_exists($e, 'getBindings')) {
+            $bindings = $e->getBindings();
+
+            if (is_array($bindings) && $bindings !== []) {
+                $context->line('Bindings: ' . json_encode($bindings, JSON_UNESCAPED_SLASHES));
+            }
+        }
+
+        $context->line('');
     }
 }
