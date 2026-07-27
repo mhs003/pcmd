@@ -35,6 +35,17 @@ Laravel
 
 ---
 
+## Features
+
+- **Framework-agnostic** — Works with Laravel, Symfony, or plain PHP. Not tied to any framework.
+- **Environment-aware** — Commands appear automatically based on the current project.
+- **Declarative validation** — Define arguments and options with type, file, regex, and custom validators.
+- **Laravel integration** — Commands can access Eloquent, Artisan, DB, cache, queue, and more via `$ctx->laravel()`.
+- **Self-documenting** — Every command exposes help with arguments, options, and examples automatically.
+- **Hook system** — Run code before/after every command via `~/.pcmd/hooks/`.
+- **Cached discovery** — Filesystem scans are cached with mtime-based invalidation.
+- **Debug mode** — `--debug` shows full stack traces and SQL context for errors.
+
 ## Installation
 
 ```bash
@@ -109,6 +120,11 @@ The filename determines the command name:
 | `->description(string)` | Command description for help output |
 | `->alias(string)` | Alternative name for the command |
 | `->aliases(string[])` | Multiple aliases |
+| `->argument(name, desc?, callback?)` | Define a positional argument with validation |
+| `->option(name, desc?, callback?)` | Define a named option with validation |
+| `->hidden()` | Hide from command listings |
+| `->tags(string[])` | Categorization tags |
+| `->example(usage, description?)` | Usage example for help output |
 | `->run(callable)` | The command callback receiving `Context $ctx` |
 
 ### Context API
@@ -116,13 +132,15 @@ The filename determines the command name:
 The `Context` object provides everything a command needs:
 
 ```php
+$ctx->arg('file');        // Argument by name
+$ctx->arg(0);             // Argument by index
+$ctx->option('algo');     // Named option value
+$ctx->option('force');    // Boolean option (true/false)
+
+// Environment
 $ctx->cwd();              // Current working directory
 $ctx->root();             // Project root (detected)
 $ctx->environment();      // Environment type + root
-$ctx->arguments();        // Positional arguments
-$ctx->arg(0);             // Argument by index or name
-$ctx->option('force');    // Named option
-$ctx->options();          // All options
 
 // Output
 $ctx->info('...');
@@ -141,13 +159,14 @@ $ctx->choice('DB?', ['mysql', 'pgsql']);
 // Progress indicators
 $ctx->progress(100);
 $ctx->spinner();
+$ctx->table($headers, $rows);
 
 // Services
 $ctx->config();           // Immutable configuration
 $ctx->fs();               // Filesystem operations
 $ctx->process();          // External process execution
 $ctx->log();              // PSR-3 compatible logger
-$ctx->table($headers, $rows);
+$ctx->laravel();          // Laravel adapter (null outside Laravel)
 ```
 
 ## Environment Detection
@@ -187,6 +206,29 @@ return [
 | `doctor` | Run system diagnostics |
 | `cache:clear` | Clear the discovery cache |
 | `cache:rebuild` | Rebuild the discovery cache |
+
+## Debugging
+
+Use `--debug` (or `-d`) to get full error details:
+
+```bash
+pcmd --debug replace-user
+```
+
+Instead of a plain error message, you get the exception class, file, line, stack trace, and — for Laravel SQL errors — the query and bindings.
+
+## Documentation
+
+Full documentation is available in the `docs/` directory:
+
+- [Installation](docs/installation.md)
+- [Usage](docs/usage.md)
+- [Writing Commands](docs/writing-commands.md)
+- [Laravel Integration](docs/laravel.md)
+- [Configuration](docs/configuration.md)
+- [Hooks](docs/hooks.md)
+- [Debugging](docs/debugging.md)
+- [Context API Reference](docs/reference/context-api.md)
 
 ## Project Structure
 

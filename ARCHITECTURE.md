@@ -25,21 +25,21 @@ This architecture document describes the **target design** for v1.0. Below is th
 | §3 Application | ✅ Implemented | `src/Application/` — orchestrates lifecycle |
 | §3 Configuration | ✅ Implemented | `src/Configuration/` — Config, ConfigLoader, Defaults |
 | §3 Environment Detector | ✅ Implemented | `src/Environment/` — GenericDetector, LaravelDetector |
-| §3 Discovery | ✅ Implemented | `src/Discovery/` — CommandDiscovery, DirectoryScanner |
-| §3 Registry | ✅ Implemented | `src/Registry/` — CommandRegistry, CommandMetadata |
-| §3 Resolver | ✅ Implemented | `src/Resolution/` — CommandResolver, ResolvedCommand |
-| §3 Bootstrap | ⬜ Not started | No Framework adapter bootstrap yet |
-| §3 Context | ✅ Implemented | `src/Context/` — Context |
-| §3 Executor | ✅ Implemented | `src/Execution/` — CommandExecutor, CommandLoader |
+| §3 Discovery | ✅ Implemented | `src/Discovery/` — CommandDiscovery, DirectoryScanner, DiscoveryCache (mtime-based) |
+| §3 Registry | ✅ Implemented | `src/Registry/` — CommandRegistry, CommandMetadata (with arg/option defs) |
+| §3 Resolver | ✅ Implemented | `src/Resolution/` — CommandResolver, ResolvedCommand, InputValidator |
+| §3 Bootstrap | 🔶 Partial | LaravelAdapter bootstraps via vendor/autoload.php + bootstrap/app.php |
+| §3 Context | ✅ Implemented | `src/Context/` — Context (with framework adapter support) |
+| §3 Executor | ✅ Implemented | `src/Execution/` — CommandExecutor, CommandLoader, HookRunner |
 | §3 Logger | ✅ Implemented | `src/Logging/` — Logger, NullLogger |
-| §3 Cache | 🔶 Partial | `src/Discovery/DiscoveryCache` — no mtime invalidation |
+| §3 Cache | ✅ Implemented | `src/Discovery/DiscoveryCache` — mtime-based invalidation |
 | §3 Process Manager | ✅ Implemented | `src/Process/` — ProcessManager, ProcessResult |
 | §3 Filesystem | ✅ Implemented | `src/Filesystem/` — Filesystem, Path |
-| §15 Framework Adapter | ⬜ Not started | `src/Framework/` is empty |
-| §16 Laravel Adapter | ⬜ Not started | No Illuminate integration |
-| §19 Hook System | 🔶 Partial | Hooks in executor; no standalone HookRunner or ~/.pcmd/hooks/ |
+| §15 Framework Adapter | 🔶 Partial | FrameworkAdapterInterface exists; Laravel/LaravelAdapter implemented |
+| §16 Laravel Adapter | 🔶 Partial | LaravelAdapter with boot, ArtisanBridge, db/cache/config/queue/events/storage |
+| §19 Hook System | ✅ Implemented | HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php |
 | §20 Plugin Architecture | ⬜ Not started | Directory exists; no loading |
-| §21 Error Handling | 🔶 Partial | Typed exceptions exist; centralized formatter basic |
+| §21 Error Handling | ✅ Implemented | Typed exceptions, centralized formatter, --debug mode with stack traces and SQL context |
 
 The dependency direction rules (§1, §22) are followed throughout the implemented code.
 

@@ -762,7 +762,22 @@ Never optimize for short-term convenience at the expense of architectural qualit
 
 ---
 
-# 28. Commit Policy
+# 28. Documentation Status Updates
+
+Every feature implementation or bug fix must update the status tables in the following files to reflect the new state:
+
+- `ROADMAP.md` — Status table at the top, Milestone sections
+- `SPECIFICATION.md` — Implementation Status table
+- `ARCHITECTURE.md` — Implementation Status table
+- `COMMAND_API.md` — Implementation Status table
+
+Status values: `✅ Completed` for fully implemented, `🔶 Partial` for partially done, `⬜ Not started` for pending.
+
+Do not mark a phase complete unless all its acceptance criteria are met and tests pass.
+
+---
+
+# 29. Commit Policy
 
 Never commit changes unless the user explicitly asks you to commit.
 
@@ -776,7 +791,7 @@ If the working tree is clean when asked, report that nothing has changed.
 
 ---
 
-# 29. Final Rule
+# 30. Final Rule
 
 If this document conflicts with implementation:
 

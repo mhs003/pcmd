@@ -19,10 +19,10 @@ This document defines the **target public API** for writing pcmd commands. Below
 | Section | Status | Notes |
 |---------|--------|-------|
 | §2 Command File Structure | ✅ Implemented | Return Command::make() from PHP file. Lazy loaded. |
-| §3 Command Metadata | 🔶 Partial | ->description() and ->alias() work; ->hidden(), ->tags(), ->examples() not implemented |
-| §4 Arguments | ⬜ Not started | ->argument() builder method not implemented |
-| §5 Options | ⬜ Not started | ->option(), ->shortcut(), ->boolean(), ->value() not implemented |
-| §6 Validation | ⬜ Not started | ->required(), ->integer(), ->file(), ->regex() etc. not implemented |
+| §3 Command Metadata | ✅ Implemented | ->description(), ->alias(), ->aliases(), ->hidden(), ->tags(), ->example(), ->examples() all work |
+| §4 Arguments | ✅ Implemented | ->argument(name, desc, callback) with Argument builder: optional, default, array, file, integer, regex, validate |
+| §5 Options | ✅ Implemented | ->option(name, desc, callback) with Option builder: shortcut, boolean/value, default, allowed, multiple, file, integer, regex |
+| §6 Validation | ✅ Implemented | ->required(), ->optional(), ->integer(), ->float(), ->boolean(), ->file(), ->directory(), ->readable(), ->writable(), ->regex(), ->validate() all work via InputValidator |
 | §7 Context API | ✅ Implemented | cwd/root/home/temp/environment/command/arguments/options/config |
 | §8 Terminal API | ✅ Implemented | info/success/warn/error/line/newline; progress/spinner/table implemented |
 | §9 Input API | ✅ Implemented | ask/confirm/secret/choice/multichoice; respects --no-interaction |
@@ -30,11 +30,11 @@ This document defines the **target public API** for writing pcmd commands. Below
 | §11 Process API | ✅ Implemented | run/capture/stream/cwd/timeout/env; exitCode/stdout/stderr/successful/failed |
 | §12 Logger API | ✅ Implemented | debug/info/notice/warning/error/critical with structured context |
 | §13 Configuration API | ✅ Implemented | get/has/bool/int/string/array with dot-notation |
-| §14 Laravel Adapter API | ⬜ Not started | $ctx->laravel() returns null |
+| §14 Laravel Adapter API | 🔶 Partial | LaravelAdapter implemented; $ctx->laravel() returns adapter inside Laravel projects |
 | §15 Future Adapter API | ⬜ Not started | $ctx->symfony() etc. not available |
-| §16 Hook API | 🔶 Partial | ->before() and ->after() exist on Command builder but not wired |
+| §16 Hook API | 🔶 Partial | HookRunner loads ~/.pcmd/hooks/. ->before() and ->after() on Command builder not wired. |
 | §17 Return Values | ✅ Implemented | return 0, return 1, throw exceptions all work |
-| §18 Error Handling | ✅ Implemented | Commands should throw typed exceptions |
+| §18 Error Handling | ✅ Implemented | Typed exceptions, --debug mode with stack traces and SQL context |
 | §19 Best Practices | 📝 Documentation only | Guidelines apply but are advisory |
 
 ---

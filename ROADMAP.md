@@ -18,7 +18,7 @@
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1   | Project Foundation | ✅ Completed (no CI, CONTRIBUTING, LICENSE yet) |
+| 1   | Project Foundation | ✅ Completed (CI, .editorconfig, LICENSE added) |
 | 2   | CLI Bootstrap | ✅ Completed |
 | 3   | Configuration System | ✅ Completed |
 | 4   | Dependency Injection | ✅ Completed |
@@ -29,28 +29,28 @@
 | 9   | Logging System | ✅ Completed |
 | 10  | Environment Detection | ✅ Completed (Generic + Laravel) |
 | —   | **Milestone 1** | **✅ Completed** |
-| 11  | Command Discovery | ✅ Completed |
-| 12  | Metadata Parser | ⬜ Not started (metadata read from filename only) |
-| 13  | Command Registry | ✅ Completed |
-| 14  | Command Resolver | ✅ Completed (basic; suggestions work) |
-| 15  | Command Loader | ✅ Completed |
-| 16  | Context System | ✅ Completed |
-| 17  | Command Executor | ✅ Completed |
-| 18  | Hook System | 🔶 Partial (hooks in executor; no ~/.pcmd/hooks/ loading) |
-| 19  | Cache System | 🔶 Partial (basic serialize cache; no mtime invalidation) |
+| 11  | Command Discovery | ✅ Completed (with mtime-based caching) |
+| 12  | Metadata Parser | ✅ Completed (loadMetadata extracts description/aliases/args/options without executing run callback) |
+| 13  | Command Registry | ✅ Completed (with alias index, duplicate detection) |
+| 14  | Command Resolver | ✅ Completed (with fuzzy suggestions via Levenshtein) |
+| 15  | Command Loader | ✅ Completed (lazy; supports Command::make(), callables, objects) |
+| 16  | Context System | ✅ Completed (full API: arg/option/terminal/fs/process/log/table/spinner/progress) |
+| 17  | Command Executor | ✅ Completed (with debug mode, exception rendering, SQL context) |
+| 18  | Hook System | ✅ Completed (HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php) |
+| 19  | Cache System | ✅ Completed (mtime-based file change detection, auto-invalidation) |
 | 20  | Built-in Commands | ✅ Completed (help, list, version, env, doctor, cache:clear, cache:rebuild) |
 | —   | **Milestone 2** | **✅ Completed** |
-| 21  | General Command API | 🔶 Partial (Command::make() exists; argument/option/validation chain missing) |
-| 22  | Laravel Adapter | ⬜ Not started |
-| 23  | Laravel Command API | ⬜ Not started ($ctx->laravel() returns null) |
+| 21  | General Command API | ✅ Completed (Argument/Option builders, InputValidator, type/file/regex/validation chain) |
+| 22  | Laravel Adapter | 🔶 Partial (LaravelAdapter exists; bootstraps via vendor/autoload.php, bootstrap/app.php) |
+| 23  | Laravel Command API | 🔶 Partial ($ctx->laravel() returns adapter; db/cache/queue/config/events/storage exposed) |
 | 24  | Helper Library System | ⬜ Not started |
 | 25  | Plugin Architecture | ⬜ Not started |
-| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 26 tests) |
-| 27  | Comprehensive Unit Tests | ⬜ Not started (5 test files, far from 90% coverage) |
+| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 68 tests, 11 test files) |
+| 27  | Comprehensive Unit Tests | 🔶 Partial (11 test files, 68 tests; far from 90% coverage) |
 | 28  | Integration & E2E Tests | ⬜ Not started |
 | 29  | Performance Optimization | ⬜ Not started |
-| 30  | Documentation & Release | 🔶 Partial (README done; no CI, LICENSE, CONTRIBUTING, CHANGELOG) |
-| —   | **Milestone 3** | **⬜ Pending** |
+| 30  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
+| —   | **Milestone 3** | **🔶 In Progress** |
 | 31+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
 
 ---
@@ -1768,18 +1768,24 @@ After Phase 20, pcmd has become a functional command runner.
 
 It now supports:
 
-- ✅ Automatic command discovery
-- 🔶 Partial metadata parsing (via filename only; file-level metadata not read without execution)
+- ✅ Automatic command discovery (with mtime-based caching)
+- ✅ Metadata parsing (loadMetadata extracts description/aliases/args/options/examples/tags)
 - ✅ Command registry (with alias index, duplicate detection)
 - ✅ Command resolution (with normalization, env validation, fuzzy suggestions)
 - ✅ Lazy command loading (supports Command::make(), callables, objects)
 - ✅ Runtime Context (full API: arg/option/terminal/fs/process/log/table/spinner/progress)
-- ✅ Command execution (with before/after hooks, exception handling)
-- 🔶 Partial lifecycle hooks (executor hooks exist; no ~/.pcmd/hooks/ loading)
-- 🔶 Partial discovery caching (serialize/unserialize; no mtime invalidation)
+- ✅ Command execution (with before/after hooks, exception handling, debug mode)
+- ✅ Lifecycle hooks (HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php)
+- ✅ Discovery caching (mtime-based file change detection, auto-invalidation)
 - ✅ Built-in management commands (help, list, version, env, doctor, cache:clear, cache:rebuild)
 
-At this stage, the core engine is complete. The remaining phases focus on framework integration, plugin support, testing, optimization, packaging, and release readiness.
+Additional implemented features beyond Phase 20:
+- ✅ Full Argument/Option builder API with validation chain
+- ✅ LaravelAdapter (bootstraps Illuminate, exposes db/cache/config/queue/events/storage)
+- ✅ --debug mode (full exception details, stack traces, SQL context)
+- ✅ GitHub Actions CI, MIT LICENSE, .editorconfig
+- ✅ Professional user documentation (14 files in docs/)
+- ✅ 68 tests across 11 test files
 
 ---
 
