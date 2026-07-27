@@ -19,7 +19,7 @@ final class ArgvParser
 
     private const GLOBAL_OPTIONS = [
         'help', 'version', 'verbose', 'quiet', 'ansi', 'no-ansi',
-        'yes', 'no-interaction', 'dry-run',
+        'yes', 'no-interaction', 'dry-run', 'debug',
     ];
 
     private const SHORT_MAP = [
@@ -28,6 +28,7 @@ final class ArgvParser
         'q' => 'quiet',
         'y' => 'yes',
         'f' => 'force',
+        'd' => 'debug',
     ];
 
     /**
@@ -69,9 +70,6 @@ final class ArgvParser
             $parts = explode('=', $name, 2);
             $name = $parts[0];
             $value = $parts[1];
-        } elseif ($i < count($args) && !str_starts_with($args[$i], '-')) {
-            $value = $args[$i];
-            $i++;
         }
 
         $finalValue = $value ?? true;

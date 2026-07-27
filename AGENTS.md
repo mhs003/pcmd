@@ -762,7 +762,21 @@ Never optimize for short-term convenience at the expense of architectural qualit
 
 ---
 
-# 28. Final Rule
+# 28. Commit Policy
+
+Never commit changes unless the user explicitly asks you to commit.
+
+Even if the user asks once, treat that as a one-time instruction.
+
+Do not assume future commits are desired.
+
+Only commit when the user says "commit" or "commit the changes" in the current session.
+
+If the working tree is clean when asked, report that nothing has changed.
+
+---
+
+# 29. Final Rule
 
 If this document conflicts with implementation:
 

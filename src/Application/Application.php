@@ -28,6 +28,7 @@ use Pcmd\Environment\EnvironmentManager;
 use Pcmd\Exceptions\ConfigurationException;
 use Pcmd\Execution\CommandExecutor;
 use Pcmd\Execution\CommandLoader;
+use Pcmd\Execution\HookRunner;
 use Pcmd\Filesystem\Filesystem;
 use Pcmd\Logging\Logger;
 use Pcmd\Process\ProcessManager;
@@ -139,6 +140,7 @@ final class Application
 
         $discovery = new CommandDiscovery(new DirectoryScanner());
         $discovered = $discovery->discover($environment);
+        $loader = new CommandLoader();
 
         foreach ($discovered->all() as $metadata) {
             try {
@@ -147,6 +149,7 @@ final class Application
                 }
 
                 $registry->register($metadata);
+                $loader->loadMetadata($metadata);
             } catch (\Throwable $e) {
                 $this->output->error('Skipped: ' . $metadata->name() . ' - ' . $e->getMessage());
             }
@@ -249,6 +252,8 @@ final class Application
     {
         $commandName = $resolved->metadata()->name();
 
+        $adapter = $this->bootFrameworkAdapter($resolved, $environment);
+
         $builtins = [
             'help' => function (Context $ctx) {
                 $cmd = new HelpCommand($this->buildRegistryForHelp($ctx));
@@ -288,18 +293,25 @@ final class Application
             return $builtins[$commandName]($context);
         }
 
+        $hookRunner = new HookRunner();
         $executor = new CommandExecutor(new CommandLoader());
-        $context = $this->buildContext($resolved, $environment, $config);
+        $executor->setHooks(
+            $hookRunner->loadBeforeHooks(),
+            $hookRunner->loadAfterHooks(),
+        );
+
+        $context = $this->buildContext($resolved, $environment, $config, $adapter);
 
         return $executor->execute($resolved, $context);
     }
 
-    private function buildContext(ResolvedCommand $resolved, Environment $environment, Config $config): Context
+    private function buildContext(ResolvedCommand $resolved, Environment $environment, Config $config, ?object $adapter = null): Context
     {
         $terminal = new Terminal(
             ansi: !$this->argvParser->hasOption('no-ansi'),
             interactive: !$this->argvParser->hasOption('no-interaction'),
             verbose: $this->argvParser->hasOption('verbose'),
+            debug: $this->argvParser->hasOption('debug'),
         );
 
         $cwd = getcwd();
@@ -321,6 +333,7 @@ final class Application
             resolvedCommand: $resolved,
             cwd: $cwd,
             home: $home,
+            frameworkAdapter: $adapter,
         );
     }
 
@@ -332,13 +345,17 @@ final class Application
 
         $discovery = new CommandDiscovery(new DirectoryScanner());
         $discovered = $discovery->discover($env);
+        $loader = new CommandLoader();
 
         foreach ($discovered->all() as $metadata) {
             try {
                 if (in_array($metadata->name(), self::RESERVED_COMMANDS, true)) {
                     continue;
                 }
+
                 $registry->register($metadata);
+
+                $loader->loadMetadata($metadata);
             } catch (\Throwable) {
             }
         }
@@ -375,6 +392,34 @@ final class Application
                 $this->output->line('  ' . $command->name());
             }
         }
+    }
+
+    private function bootFrameworkAdapter(ResolvedCommand $resolved, Environment $environment): ?object
+    {
+        $commandEnv = $resolved->metadata()->environment();
+
+        if ($commandEnv === 'generic' || $commandEnv !== $environment->type()) {
+            return null;
+        }
+
+        if ($environment->isLaravel()) {
+            $adapterClass = 'Pcmd\\Framework\\Laravel\\LaravelAdapter';
+
+            if (!class_exists($adapterClass)) {
+                return null;
+            }
+
+            try {
+                $adapter = new $adapterClass($environment->root());
+                $adapter->boot();
+                return $adapter;
+            } catch (\Throwable $e) {
+                $this->output->error('Failed to bootstrap Laravel: ' . $e->getMessage());
+                return null;
+            }
+        }
+
+        return null;
     }
 
     public static function version(): string

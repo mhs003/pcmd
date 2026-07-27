@@ -14,6 +14,49 @@
 
 ---
 
+## Current Implementation Status
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 1   | Project Foundation | ✅ Completed (no CI, CONTRIBUTING, LICENSE yet) |
+| 2   | CLI Bootstrap | ✅ Completed |
+| 3   | Configuration System | ✅ Completed |
+| 4   | Dependency Injection | ✅ Completed |
+| 5   | Terminal I/O | ✅ Completed (basic; tree not implemented) |
+| 6   | Exception System | ✅ Completed |
+| 7   | Filesystem Layer | ✅ Completed |
+| 8   | Process Layer | ✅ Completed |
+| 9   | Logging System | ✅ Completed |
+| 10  | Environment Detection | ✅ Completed (Generic + Laravel) |
+| —   | **Milestone 1** | **✅ Completed** |
+| 11  | Command Discovery | ✅ Completed |
+| 12  | Metadata Parser | ⬜ Not started (metadata read from filename only) |
+| 13  | Command Registry | ✅ Completed |
+| 14  | Command Resolver | ✅ Completed (basic; suggestions work) |
+| 15  | Command Loader | ✅ Completed |
+| 16  | Context System | ✅ Completed |
+| 17  | Command Executor | ✅ Completed |
+| 18  | Hook System | 🔶 Partial (hooks in executor; no ~/.pcmd/hooks/ loading) |
+| 19  | Cache System | 🔶 Partial (basic serialize cache; no mtime invalidation) |
+| 20  | Built-in Commands | ✅ Completed (help, list, version, env, doctor, cache:clear, cache:rebuild) |
+| —   | **Milestone 2** | **✅ Completed** |
+| 21  | General Command API | 🔶 Partial (Command::make() exists; argument/option/validation chain missing) |
+| 22  | Laravel Adapter | ⬜ Not started |
+| 23  | Laravel Command API | ⬜ Not started ($ctx->laravel() returns null) |
+| 24  | Helper Library System | ⬜ Not started |
+| 25  | Plugin Architecture | ⬜ Not started |
+| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 26 tests) |
+| 27  | Comprehensive Unit Tests | ⬜ Not started (5 test files, far from 90% coverage) |
+| 28  | Integration & E2E Tests | ⬜ Not started |
+| 29  | Performance Optimization | ⬜ Not started |
+| 30  | Documentation & Release | 🔶 Partial (README done; no CI, LICENSE, CONTRIBUTING, CHANGELOG) |
+| —   | **Milestone 3** | **⬜ Pending** |
+| 31+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
+
+---
+
+---
+
 # 1. Project Foundation
 
 ## Goal
@@ -911,22 +954,22 @@ Command execution.
 
 ---
 
-## Milestone 1 Complete
+## ✅ Milestone 1 Complete — Implemented
 
-After completing the first ten phases, the project should provide:
+The first ten phases are implemented:
 
-- A production-ready repository structure
-- A working CLI executable
-- Immutable configuration
-- Dependency injection
-- Terminal abstraction
-- Typed exception hierarchy
-- Filesystem abstraction
-- Process execution
-- Logging infrastructure
-- Automatic environment detection
+- ✅ A production-ready repository structure
+- ✅ A working CLI executable
+- ✅ Immutable configuration
+- ✅ Dependency injection
+- ✅ Terminal abstraction (with progress, spinner, table)
+- ✅ Typed exception hierarchy
+- ✅ Filesystem abstraction
+- ✅ Process execution
+- ✅ Logging infrastructure
+- ✅ Automatic environment detection (Generic + Laravel)
 
-At this point, **no commands exist yet**, but the core infrastructure required to build the rest of the system is in place.
+Note: At this point **no commands exist yet**, but the core infrastructure required to build the rest of the system is in place.
 
 ---
 
@@ -1719,22 +1762,22 @@ Doctor detects common problems.
 
 ---
 
-## Milestone 2 Complete
+## ✅ Milestone 2 Complete — Implemented
 
 After Phase 20, pcmd has become a functional command runner.
 
 It now supports:
 
-- Automatic command discovery
-- Metadata parsing
-- Command registry
-- Command resolution
-- Lazy command loading
-- Runtime Context
-- Command execution
-- Lifecycle hooks
-- Discovery caching
-- Built-in management commands
+- ✅ Automatic command discovery
+- 🔶 Partial metadata parsing (via filename only; file-level metadata not read without execution)
+- ✅ Command registry (with alias index, duplicate detection)
+- ✅ Command resolution (with normalization, env validation, fuzzy suggestions)
+- ✅ Lazy command loading (supports Command::make(), callables, objects)
+- ✅ Runtime Context (full API: arg/option/terminal/fs/process/log/table/spinner/progress)
+- ✅ Command execution (with before/after hooks, exception handling)
+- 🔶 Partial lifecycle hooks (executor hooks exist; no ~/.pcmd/hooks/ loading)
+- 🔶 Partial discovery caching (serialize/unserialize; no mtime invalidation)
+- ✅ Built-in management commands (help, list, version, env, doctor, cache:clear, cache:rebuild)
 
 At this stage, the core engine is complete. The remaining phases focus on framework integration, plugin support, testing, optimization, packaging, and release readiness.
 

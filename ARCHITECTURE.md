@@ -15,7 +15,35 @@
 
 ---
 
-# 1. Architectural Philosophy
+## Implementation Status
+
+This architecture document describes the **target design** for v1.0. Below is the current implementation state of each component.
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| §3 CLI | ✅ Implemented | `src/CLI/` — ArgvParser, Input, Output |
+| §3 Application | ✅ Implemented | `src/Application/` — orchestrates lifecycle |
+| §3 Configuration | ✅ Implemented | `src/Configuration/` — Config, ConfigLoader, Defaults |
+| §3 Environment Detector | ✅ Implemented | `src/Environment/` — GenericDetector, LaravelDetector |
+| §3 Discovery | ✅ Implemented | `src/Discovery/` — CommandDiscovery, DirectoryScanner |
+| §3 Registry | ✅ Implemented | `src/Registry/` — CommandRegistry, CommandMetadata |
+| §3 Resolver | ✅ Implemented | `src/Resolution/` — CommandResolver, ResolvedCommand |
+| §3 Bootstrap | ⬜ Not started | No Framework adapter bootstrap yet |
+| §3 Context | ✅ Implemented | `src/Context/` — Context |
+| §3 Executor | ✅ Implemented | `src/Execution/` — CommandExecutor, CommandLoader |
+| §3 Logger | ✅ Implemented | `src/Logging/` — Logger, NullLogger |
+| §3 Cache | 🔶 Partial | `src/Discovery/DiscoveryCache` — no mtime invalidation |
+| §3 Process Manager | ✅ Implemented | `src/Process/` — ProcessManager, ProcessResult |
+| §3 Filesystem | ✅ Implemented | `src/Filesystem/` — Filesystem, Path |
+| §15 Framework Adapter | ⬜ Not started | `src/Framework/` is empty |
+| §16 Laravel Adapter | ⬜ Not started | No Illuminate integration |
+| §19 Hook System | 🔶 Partial | Hooks in executor; no standalone HookRunner or ~/.pcmd/hooks/ |
+| §20 Plugin Architecture | ⬜ Not started | Directory exists; no loading |
+| §21 Error Handling | 🔶 Partial | Typed exceptions exist; centralized formatter basic |
+
+The dependency direction rules (§1, §22) are followed throughout the implemented code.
+
+---
 
 The architecture of pcmd is built around one fundamental idea:
 

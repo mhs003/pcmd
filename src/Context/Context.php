@@ -19,6 +19,7 @@ final class Context
     private ResolvedCommand $resolvedCommand;
     private string $cwd;
     private string $home;
+    private ?object $frameworkAdapter = null;
 
     public function __construct(
         Config $config,
@@ -27,6 +28,7 @@ final class Context
         ResolvedCommand $resolvedCommand,
         string $cwd,
         string $home,
+        ?object $frameworkAdapter = null,
     ) {
         $this->config = $config;
         $this->terminal = $terminal;
@@ -34,6 +36,7 @@ final class Context
         $this->resolvedCommand = $resolvedCommand;
         $this->cwd = $cwd;
         $this->home = $home;
+        $this->frameworkAdapter = $frameworkAdapter;
     }
 
     public function cwd(): string
@@ -192,8 +195,8 @@ final class Context
         return new \Pcmd\Logging\NullLogger();
     }
 
-    public function laravel(): null
+    public function laravel(): ?object
     {
-        return null;
+        return $this->frameworkAdapter;
     }
 }

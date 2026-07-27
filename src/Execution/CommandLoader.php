@@ -10,6 +10,25 @@ use Pcmd\Support\Command;
 final class CommandLoader
 {
     /**
+     * Load command metadata from file without requiring a run callback.
+     * Populates description, aliases, arguments, options, tags, examples.
+     */
+    public function loadMetadata(CommandMetadata $metadata): void
+    {
+        $file = $metadata->file();
+
+        if ($file === '' || !file_exists($file)) {
+            return;
+        }
+
+        $result = require $file;
+
+        if ($result instanceof Command) {
+            $this->enrichMetadata($metadata, $result);
+        }
+    }
+
+    /**
      * @return callable|null
      */
     public function load(CommandMetadata $metadata): ?callable
@@ -31,6 +50,8 @@ final class CommandLoader
         }
 
         if ($result instanceof Command) {
+            $this->enrichMetadata($metadata, $result);
+
             $callback = $result->getRunCallback();
 
             if ($callback === null) {
@@ -55,5 +76,36 @@ final class CommandLoader
             'Command file "%s" must return a Command, callable, or object with run().',
             $file,
         ));
+    }
+
+    private function enrichMetadata(CommandMetadata $metadata, Command $command): void
+    {
+        if ($command->getDescription() !== '') {
+            $metadata->setDescription($command->getDescription());
+        }
+
+        if ($command->getAliases() !== []) {
+            $metadata->setAliases($command->getAliases());
+        }
+
+        if ($command->getTags() !== []) {
+            $metadata->setTags($command->getTags());
+        }
+
+        if ($command->getExamples() !== []) {
+            $metadata->setExamples($command->getExamples());
+        }
+
+        if ($command->getArguments() !== []) {
+            $metadata->setArgumentDefinitions($command->getArguments());
+        }
+
+        if ($command->getOptions() !== []) {
+            $metadata->setOptionDefinitions($command->getOptions());
+        }
+
+        if ($command->isHidden()) {
+            $metadata->setHidden(true);
+        }
     }
 }

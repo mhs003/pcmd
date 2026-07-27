@@ -9,12 +9,14 @@ final class Terminal
     private bool $ansi;
     private bool $interactive;
     private bool $verbose;
+    private bool $debug;
 
-    public function __construct(bool $ansi = true, bool $interactive = true, bool $verbose = false)
+    public function __construct(bool $ansi = true, bool $interactive = true, bool $verbose = false, bool $debug = false)
     {
         $this->ansi = $ansi;
         $this->interactive = $interactive;
         $this->verbose = $verbose;
+        $this->debug = $debug;
     }
 
     public function info(string $message): void
@@ -167,6 +169,11 @@ final class Terminal
     public function isVerbose(): bool
     {
         return $this->verbose;
+    }
+
+    public function isDebug(): bool
+    {
+        return $this->debug;
     }
 
     public function width(): int

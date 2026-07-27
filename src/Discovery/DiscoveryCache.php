@@ -21,7 +21,10 @@ final class DiscoveryCache
         $this->cacheDir = $cacheDir ?? $home . DIRECTORY_SEPARATOR . '.pcmd' . DIRECTORY_SEPARATOR . 'cache';
     }
 
-    public function load(): ?CommandRegistry
+    /**
+     * @param list<array{path: string, name: string}> $currentFiles
+     */
+    public function load(array $currentFiles): ?CommandRegistry
     {
         $path = $this->cachePath();
 
@@ -35,16 +38,35 @@ final class DiscoveryCache
             return null;
         }
 
-        $registry = @unserialize($data);
+        $payload = @unserialize($data);
+
+        if (!is_array($payload)) {
+            return null;
+        }
+
+        $registry = $payload['registry'] ?? null;
 
         if (!$registry instanceof CommandRegistry) {
+            return null;
+        }
+
+        $cachedFiles = $payload['files'] ?? null;
+
+        if (!is_array($cachedFiles)) {
+            return $registry;
+        }
+
+        if (!$this->filesMatch($cachedFiles, $currentFiles)) {
             return null;
         }
 
         return $registry;
     }
 
-    public function save(CommandRegistry $registry): void
+    /**
+     * @param list<array{path: string, name: string}> $commandFiles
+     */
+    public function save(CommandRegistry $registry, array $commandFiles): void
     {
         $dir = dirname($this->cachePath());
 
@@ -52,7 +74,22 @@ final class DiscoveryCache
             @mkdir($dir, 0755, true);
         }
 
-        @file_put_contents($this->cachePath(), serialize($registry));
+        $files = [];
+
+        foreach ($commandFiles as $file) {
+            $mtime = @filemtime($file['path']);
+
+            if ($mtime !== false) {
+                $files[$file['path']] = $mtime;
+            }
+        }
+
+        $payload = [
+            'registry' => $registry,
+            'files' => $files,
+        ];
+
+        @file_put_contents($this->cachePath(), serialize($payload));
     }
 
     public function clear(): void
@@ -64,21 +101,32 @@ final class DiscoveryCache
         }
     }
 
-    public function isValid(): bool
+    /**
+     * @param array<mixed> $cached
+     * @param list<array{path: string, name: string}> $current
+     */
+    private function filesMatch(array $cached, array $current): bool
     {
-        $path = $this->cachePath();
-
-        if (!file_exists($path)) {
+        if (count($cached) !== count($current)) {
             return false;
         }
 
-        $mtime = @filemtime($path);
+        foreach ($current as $file) {
+            $path = $file['path'];
+            $cachedMtime = $cached[$path] ?? null;
 
-        if ($mtime === false) {
-            return false;
+            if ($cachedMtime === null || !is_int($cachedMtime)) {
+                return false;
+            }
+
+            $currentMtime = @filemtime($path);
+
+            if ($currentMtime === false || $currentMtime !== $cachedMtime) {
+                return false;
+            }
         }
 
-        return (time() - $mtime) < 3600;
+        return true;
     }
 
     private function cachePath(): string

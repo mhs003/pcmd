@@ -39,10 +39,15 @@ final class ListCommand
 
         if ($general !== []) {
             $ctx->line('General');
-            $ctx->line('-------');
 
             foreach ($general as $cmd) {
-                $ctx->line('  ' . $cmd->name());
+                $desc = $cmd->description();
+
+                if ($desc !== '') {
+                    $ctx->line('  ' . str_pad($cmd->name(), 24) . $desc);
+                } else {
+                    $ctx->line('  ' . $cmd->name());
+                }
             }
 
             $ctx->line('');
@@ -62,10 +67,15 @@ final class ListCommand
 
         if ($specific !== []) {
             $ctx->line(ucfirst($envType));
-            $ctx->line(str_repeat('-', strlen($envType)));
 
             foreach ($specific as $cmd) {
-                $ctx->line('  ' . $cmd->name());
+                $desc = $cmd->description();
+
+                if ($desc !== '') {
+                    $ctx->line('  ' . str_pad($cmd->name(), 24) . $desc);
+                } else {
+                    $ctx->line('  ' . $cmd->name());
+                }
             }
 
             $ctx->line('');

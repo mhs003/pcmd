@@ -31,11 +31,27 @@ final class ResolvedCommand
     }
 
     /**
+     * @param list<string>|array<string, mixed> $arguments
+     */
+    public function setArguments(array $arguments): void
+    {
+        $this->arguments = $arguments;
+    }
+
+    /**
      * @param list<string> $arguments
      */
     public function setPositionalArguments(array $arguments): void
     {
         $this->arguments = $arguments;
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function setOptions(array $options): void
+    {
+        $this->options = $options;
     }
 
     /**

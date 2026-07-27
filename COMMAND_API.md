@@ -12,6 +12,33 @@
 
 ---
 
+## Implementation Status
+
+This document defines the **target public API** for writing pcmd commands. Below is what has been implemented so far.
+
+| Section | Status | Notes |
+|---------|--------|-------|
+| §2 Command File Structure | ✅ Implemented | Return Command::make() from PHP file. Lazy loaded. |
+| §3 Command Metadata | 🔶 Partial | ->description() and ->alias() work; ->hidden(), ->tags(), ->examples() not implemented |
+| §4 Arguments | ⬜ Not started | ->argument() builder method not implemented |
+| §5 Options | ⬜ Not started | ->option(), ->shortcut(), ->boolean(), ->value() not implemented |
+| §6 Validation | ⬜ Not started | ->required(), ->integer(), ->file(), ->regex() etc. not implemented |
+| §7 Context API | ✅ Implemented | cwd/root/home/temp/environment/command/arguments/options/config |
+| §8 Terminal API | ✅ Implemented | info/success/warn/error/line/newline; progress/spinner/table implemented |
+| §9 Input API | ✅ Implemented | ask/confirm/secret/choice/multichoice; respects --no-interaction |
+| §10 Filesystem API | ✅ Implemented | read/write/copy/move/delete/exists/mkdir/walk/glob/tempFile/tempDirectory |
+| §11 Process API | ✅ Implemented | run/capture/stream/cwd/timeout/env; exitCode/stdout/stderr/successful/failed |
+| §12 Logger API | ✅ Implemented | debug/info/notice/warning/error/critical with structured context |
+| §13 Configuration API | ✅ Implemented | get/has/bool/int/string/array with dot-notation |
+| §14 Laravel Adapter API | ⬜ Not started | $ctx->laravel() returns null |
+| §15 Future Adapter API | ⬜ Not started | $ctx->symfony() etc. not available |
+| §16 Hook API | 🔶 Partial | ->before() and ->after() exist on Command builder but not wired |
+| §17 Return Values | ✅ Implemented | return 0, return 1, throw exceptions all work |
+| §18 Error Handling | ✅ Implemented | Commands should throw typed exceptions |
+| §19 Best Practices | 📝 Documentation only | Guidelines apply but are advisory |
+
+---
+
 # 1. Introduction
 
 ## Overview

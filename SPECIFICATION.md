@@ -14,6 +14,34 @@
 
 ---
 
+## Implementation Status
+
+This specification describes the **target behavior** for v1.0. Sections marked below indicate what has been implemented so far.
+
+| Area | Status |
+|------|--------|
+| §2 CLI Syntax | ✅ Mostly implemented. Dry-run not wired. Suggestions work. |
+| §3 Command Discovery | ✅ Implemented (recursive scan, ignore patterns, duplicate detection, caching) |
+| §4 Environment Detection | ✅ Implemented (Generic + Laravel; directory walk-up) |
+| §5 Command Resolution | ✅ Implemented (normalize, alias, env check, validation, suggestions) |
+| §6 Command Lifecycle | ✅ Implemented (bootstrap, context, hooks, execute, cleanup, exit) |
+| §7 Context API | ✅ Implemented (cwd, root, home, temp, arg, option, terminal, fs, process, log, table, spinner, progress) |
+| §8 Arguments & Options | 🔶 Partial (positional args work; full validation chain not implemented) |
+| §9 Interactive Console | 🔶 Partial (ask/confirm/choice/secret work; tree not implemented) |
+| §10 Configuration | ✅ Implemented (immutable, dot-notation, typed getters, ~/.pcmd/config.php) |
+| §11 General Commands | 🔶 Partial (engine supports them; example commands not shipped) |
+| §12 Laravel Commands | ⬜ Not implemented. $ctx->laravel() returns null. |
+| §13 Help System | 🔶 Partial (help/list commands work; auto-generated argument/option docs missing) |
+| §14 Exit Codes | 🔶 Partial (0, 1, 2, 3, 6, 9 used; not all codes wired) |
+| §15 Errors | 🔶 Partial (typed exceptions exist; suggestion on unknown commands works) |
+| §16 Logging | ✅ Implemented (PSR-3 style, multi-level, secret masking) |
+| §17 Caching | 🔶 Partial (serialize cache; no mtime invalidation) |
+| §18 Security | ⚠️ Not audited; basic confirmation in place |
+| §19 Examples | 🔶 Partial (commands placed in ~/.pcmd/commands work; no built-in example pack) |
+| §20 Appendix | ✅ Reserved names and exit codes match implementation |
+
+---
+
 # 1. Introduction & Goals
 
 ## 1.1 What is pcmd?
