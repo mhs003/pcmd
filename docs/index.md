@@ -1,0 +1,47 @@
+# pcmd
+
+**Version 0.1.0** — Portable, environment-aware command toolkit for PHP developers.
+
+pcmd is a standalone CLI that lets you write reusable commands once and use them across every PHP project — regardless of framework. Commands are discovered automatically from `~/.pcmd/commands/`. No registration, no configuration, no project modification.
+
+## Features
+
+- **Framework-agnostic** — Works with Laravel, Symfony, WordPress, or plain PHP. Not tied to any framework.
+- **Environment-aware** — Commands enable or disable automatically based on the current project.
+- **Zero configuration** — Drop a PHP file into `~/.pcmd/commands/` and it's immediately available.
+- **Self-documenting** — Every command exposes help automatically from its metadata.
+- **Lazy loaded** — Command files are included only when executed, not at startup.
+- **Cached discovery** — Filesystem scans are cached with mtime-based invalidation.
+
+## Quick Start
+
+```bash
+# Install
+git clone https://github.com/your-org/pcmd.git
+cd pcmd
+composer install
+ln -s "$PWD/bin/pcmd" ~/.local/bin/pcmd
+
+# See what's available
+pcmd list
+
+# Get help
+pcmd help json:pretty
+
+# Run a command
+pcmd json:pretty data.json
+```
+
+## Next Steps
+
+- [Installation](installation.md) — Full setup guide
+- [Usage](usage.md) — CLI syntax, options, built-in commands
+- [Writing Commands](writing-commands.md) — Create your own commands
+- [Laravel Integration](laravel.md) — Use pcmd with Laravel projects
+- [Configuration](configuration.md) — Configure pcmd behavior
+- [Debugging](debugging.md) — Error handling and troubleshooting
+
+## Requirements
+
+- PHP 8.3 or later
+- Composer (for installation)
