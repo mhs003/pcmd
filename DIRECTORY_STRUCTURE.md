@@ -100,6 +100,7 @@ pcmd/
 ├── docs/
 ├── resources/
 ├── bin/
+├── install.sh
 ├── composer.json
 ├── composer.lock
 ├── phpunit.xml
@@ -145,6 +146,18 @@ Contains templates and bundled assets.
 ## bin/
 
 Contains executable entrypoints.
+
+---
+
+## install.sh
+
+Standalone installer script. Supports `install`, `update`, and `uninstall`.
+
+Usage:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/your-org/pcmd/main/install.sh | bash
+```
 
 ---
 

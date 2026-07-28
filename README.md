@@ -48,15 +48,24 @@ Laravel
 
 ## Installation
 
+### One-liner (recommended)
+
 ```bash
-# Clone the repository
+curl -fsSL https://raw.githubusercontent.com/your-org/pcmd/main/install.sh | bash
+```
+
+### Via Composer (once published)
+
+```bash
+composer global require pcmd/pcmd
+```
+
+### Manual
+
+```bash
 git clone https://github.com/your-org/pcmd.git
 cd pcmd
-
-# Install dependencies
 composer install
-
-# Symlink to your PATH
 ln -s "$PWD/bin/pcmd" ~/.local/bin/pcmd
 ```
 

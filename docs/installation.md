@@ -5,7 +5,33 @@
 - PHP 8.3 or later
 - Composer
 
-## Download
+## Quick Install (Recommended)
+
+The fastest way to install pcmd:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/your-org/pcmd/main/install.sh | bash
+```
+
+This clones the repository, installs dependencies, and symlinks the binary to `~/.local/bin/pcmd`.
+
+Re-run the same command to update to the latest version.
+
+### Uninstall
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/your-org/pcmd/main/install.sh) --uninstall
+```
+
+## Via Composer (Once Published)
+
+```bash
+composer global require pcmd/pcmd
+```
+
+This registers the `pcmd` binary via Composer's bin directory. Ensure `~/.config/composer/vendor/bin` is in your PATH.
+
+## Manual Installation
 
 Clone the repository and install dependencies:
 
@@ -15,15 +41,15 @@ cd pcmd
 composer install
 ```
 
-## Install the Binary
-
-Symlink the executable into your PATH:
+Then symlink the executable into your PATH:
 
 ```bash
 ln -s "$PWD/bin/pcmd" ~/.local/bin/pcmd
 ```
 
-Ensure `~/.local/bin` is in your PATH (it typically is on modern Linux and macOS). If not, add this line to your `~/.bashrc` or `~/.zshrc`:
+## PATH Setup
+
+Ensure `~/.local/bin` is in your PATH. If not, add this line to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
@@ -57,7 +83,7 @@ The `commands/` directory is created on first run if it doesn't exist. You can p
 
 ## Bundled Commands
 
-pcmd ships with example commands in `resources/commands/` (general + Laravel). These are discovered automatically on every install — no setup required. User commands in `~/.pcmd/commands/` take precedence over bundled ones.
+pcmd ships with example commands in `resources/commands/` (3 general + 5 Laravel). These are discovered automatically on every install — no setup required. User commands in `~/.pcmd/commands/` take precedence over bundled ones.
 
 To customize or remove bundled commands, publish them to your home directory:
 
