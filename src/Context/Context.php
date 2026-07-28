@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pcmd\Context;
 
 use Pcmd\Configuration\Config;
+use Pcmd\Contracts\LoggerInterface;
 use Pcmd\Environment\Environment;
 use Pcmd\Exceptions\ValidationException;
 use Pcmd\Registry\CommandMetadata;
@@ -22,6 +23,7 @@ final class Context
     private string $home;
     private ?object $frameworkAdapter = null;
     private ?HelperLoader $helperLoader = null;
+    private ?LoggerInterface $logger = null;
 
     public function __construct(
         Config $config,
@@ -32,6 +34,7 @@ final class Context
         string $home,
         ?object $frameworkAdapter = null,
         ?HelperLoader $helperLoader = null,
+        ?LoggerInterface $logger = null,
     ) {
         $this->config = $config;
         $this->terminal = $terminal;
@@ -41,6 +44,7 @@ final class Context
         $this->home = $home;
         $this->frameworkAdapter = $frameworkAdapter;
         $this->helperLoader = $helperLoader;
+        $this->logger = $logger;
     }
 
     public function cwd(): string
@@ -194,8 +198,12 @@ final class Context
         return new \Pcmd\Process\ProcessManager();
     }
 
-    public function log(): \Pcmd\Contracts\LoggerInterface
+    public function log(): LoggerInterface
     {
+        if ($this->logger !== null) {
+            return $this->logger;
+        }
+
         return new \Pcmd\Logging\NullLogger();
     }
 

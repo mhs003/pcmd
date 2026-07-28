@@ -6,6 +6,7 @@ namespace Pcmd\Process;
 
 use Pcmd\Contracts\ProcessInterface;
 use Pcmd\Contracts\ProcessResultInterface;
+use Pcmd\Exceptions\ProcessException;
 
 final class ProcessManager implements ProcessInterface
 {
@@ -66,7 +67,7 @@ final class ProcessManager implements ProcessInterface
         );
 
         if (!is_resource($process)) {
-            throw new \RuntimeException('Failed to start process.');
+            throw new ProcessException('Failed to start process.');
         }
 
         fclose($pipes[0]);
@@ -79,7 +80,7 @@ final class ProcessManager implements ProcessInterface
         while (true) {
             if ($this->timeout > 0 && (time() - $start) > $this->timeout) {
                 proc_terminate($process, 9);
-                throw new \RuntimeException('Process timed out.');
+                throw new ProcessException('Process timed out.');
             }
 
             $status = proc_get_status($process);
@@ -164,28 +165,67 @@ final class ProcessManager implements ProcessInterface
         );
 
         if (!is_resource($process)) {
-            throw new \RuntimeException(
+            throw new ProcessException(
                 'Failed to start process: ' . implode(' ', $command),
             );
         }
 
         fclose($pipes[0]);
 
-        $stdout = stream_get_contents($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
+        stream_set_blocking($pipes[1], false);
+        stream_set_blocking($pipes[2], false);
 
-        fclose($pipes[1]);
-        fclose($pipes[2]);
+        $stdout = '';
+        $stderr = '';
+        $start = time();
 
-        $exitCode = proc_close($process);
+        while (true) {
+            if ($this->timeout > 0 && (time() - $start) > $this->timeout) {
+                proc_terminate($process, 9);
 
-        $stdout = $stdout === false ? '' : $stdout;
-        $stderr = $stderr === false ? '' : $stderr;
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
 
-        if (!$capture) {
-            echo $stdout;
+                throw new ProcessException('Process timed out.');
+            }
+
+            $status = proc_get_status($process);
+
+            $out = fread($pipes[1], 4096);
+            if ($out !== false && $out !== '') {
+                $stdout .= $out;
+            }
+
+            $err = fread($pipes[2], 4096);
+            if ($err !== false && $err !== '') {
+                $stderr .= $err;
+            }
+
+            if (!$status['running']) {
+                $remainingOut = stream_get_contents($pipes[1]);
+                $remainingErr = stream_get_contents($pipes[2]);
+
+                if ($remainingOut !== false) {
+                    $stdout .= $remainingOut;
+                }
+
+                if ($remainingErr !== false) {
+                    $stderr .= $remainingErr;
+                }
+
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+
+                if (!$capture) {
+                    echo $stdout;
+                }
+
+                return new ProcessResult($status['exitcode'], $stdout, $stderr);
+            }
+
+            usleep(10000);
         }
-
-        return new ProcessResult($exitCode, $stdout, $stderr);
     }
 }

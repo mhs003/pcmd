@@ -81,7 +81,7 @@ Set a timeout in seconds:
 $proc->timeout(300)->run(['composer', 'install']);
 ```
 
-If the process exceeds the timeout, it is terminated with SIGKILL and a `RuntimeException` is thrown.
+If the process exceeds the timeout, it is terminated with SIGKILL and a `ProcessException` is thrown.
 
 ### env()
 

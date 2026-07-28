@@ -61,12 +61,15 @@ Before Hooks (in order)
 Command callback
     ↓
 After Hooks (in order, always runs)
+    ↓
+Shutdown Hooks (always runs)
 ```
 
 - Before hooks execute in the order they are defined.
 - If a before hook throws an exception, execution stops and the command is not invoked.
 - After hooks run even if the command succeeds (similar to a `finally` block).
 - After hooks do not run if a before hook throws.
+- Shutdown hooks run after the command and after hooks, regardless of success or failure.
 
 ## Example: Execution Timer
 

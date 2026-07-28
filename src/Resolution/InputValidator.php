@@ -83,7 +83,7 @@ final class InputValidator
         }
 
         foreach ($rawOptions as $name => $value) {
-            if ($name === 'help' || $name === 'version' || $name === 'verbose' || $name === 'quiet' || $name === 'yes' || $name === 'no-interaction' || $name === 'no-ansi' || $name === 'dry-run' || $name === 'force') {
+            if ($name === 'help' || $name === 'version' || $name === 'verbose' || $name === 'quiet' || $name === 'yes' || $name === 'no-interaction' || $name === 'no-ansi' || $name === 'dry-run' || $name === 'force' || $name === 'debug') {
                 continue;
             }
 

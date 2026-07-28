@@ -37,7 +37,7 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 | §16 Logging | ✅ Implemented (PSR-3 style, multi-level, secret masking) |
 | §17 Caching | ✅ Implemented (mtime-based file change detection, auto-invalidation) |
 | §18 Security | ⚠️ Not audited; basic confirmation in place |
-| §19 Examples | 🔶 Partial (commands placed in ~/.pcmd/commands work; no built-in example pack) |
+| §19 Examples | ✅ Implemented (8 bundled example commands shipped in resources/commands/: 3 general + 5 Laravel; publish:commands built-in) |
 | §20 Appendix | ✅ Reserved names and exit codes match implementation |
 
 ---

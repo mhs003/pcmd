@@ -100,7 +100,6 @@ pcmd/
 ├── docs/
 ├── resources/
 ├── bin/
-├── scripts/
 ├── composer.json
 ├── composer.lock
 ├── phpunit.xml
@@ -736,12 +735,20 @@ All custom exceptions live here.
 ```
 tests/
 
-├── Unit/
-├── Integration/
-├── EndToEnd/
-├── Fixtures/
-└── Helpers/
+└── Unit/
+    ├── CLI/
+    ├── Configuration/
+    ├── Context/
+    ├── Discovery/
+    ├── Environment/
+    ├── Execution/
+    ├── Framework/
+    ├── Registry/
+    ├── Resolution/
+    └── Support/
 ```
+
+Future directories (Integration/, EndToEnd/, Fixtures/, Helpers/) will be added in subsequent phases.
 
 ---
 
@@ -834,24 +841,45 @@ duplicate-commands/
 ```
 docs/
 
-├── AGENTS.md
-├── SPECIFICATION.md
-├── ARCHITECTURE.md
-├── COMMAND_API.md
-├── DIRECTORY_STRUCTURE.md
-├── ROADMAP.md
-└── adr/
+├── configuration.md
+├── debugging.md
+├── helpers.md
+├── hooks.md
+├── index.md
+├── installation.md
+├── laravel.md
+├── usage.md
+├── writing-commands.md
+├── reference/
+│   ├── argument-api.md
+│   ├── context-api.md
+│   ├── filesystem.md
+│   ├── option-api.md
+│   ├── process.md
+│   └── terminal.md
+└── adr/             (future)
+```
+
+Root-level documentation files:
+
+```
+AGENTS.md
+ARCHITECTURE.md
+COMMAND_API.md
+DIRECTORY_STRUCTURE.md
+ROADMAP.md
+SPECIFICATION.md
 ```
 
 ---
 
-# 30. ADR Directory
+# 30. ADR Directory (Future)
 
 ```
 docs/adr/
 ```
 
-Contains architectural decisions.
+Planned location for architectural decision records.
 
 ---
 
@@ -863,6 +891,8 @@ ADR-0001-Context.md
 ADR-0002-Lazy-Loading.md
 ```
 
+Not yet created. ADRs will be added as architectural changes are made.
+
 ---
 
 # 31. Resources Layout
@@ -870,9 +900,17 @@ ADR-0002-Lazy-Loading.md
 ```
 resources/
 
-├── stubs/
-├── templates/
-└── examples/
+└── commands/
+    ├── general/
+    │   ├── file/
+    │   ├── git/
+    │   └── json/
+    └── laravel/
+        ├── cache/
+        ├── db/
+        ├── job/
+        ├── search/
+        └── users/
 ```
 
 ---

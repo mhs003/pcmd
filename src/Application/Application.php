@@ -390,6 +390,7 @@ final class Application
         $commandName = $resolved->metadata()->name();
 
         $adapter = $this->bootFrameworkAdapter($resolved, $environment);
+        $hookRunner = new HookRunner();
 
         $builtins = [
             'help' => function (Context $ctx) {
@@ -418,31 +419,47 @@ final class Application
                 $cmd = new CacheCommand($cache);
                 return $cmd->clear($ctx);
             },
-            'cache:rebuild' => function (Context $ctx) {
+            'cache:rebuild' => function (Context $ctx) use ($environment) {
                 $cache = new DiscoveryCache();
-                $cmd = new CacheCommand($cache);
-                return $cmd->rebuild($ctx);
+                $cache->clear();
+                $discovery = new CommandDiscovery(
+                    new DirectoryScanner(),
+                    cache: $cache,
+                );
+                $discovery->discover($environment);
+                $ctx->success('Discovery cache rebuilt.');
+                return 0;
             },
             'publish:commands' => function (Context $ctx) {
                 return $this->publishBundledCommands($ctx);
             },
         ];
 
+        $result = null;
+        $context = null;
+
         if (isset($builtins[$commandName])) {
             $context = $this->buildContext($resolved, $environment, $config);
-            return $builtins[$commandName]($context);
+            $result = $builtins[$commandName]($context);
+        } else {
+            $executor = new CommandExecutor(new CommandLoader());
+            $executor->setHooks(
+                $hookRunner->loadBeforeHooks(),
+                $hookRunner->loadAfterHooks(),
+            );
+
+            $context = $this->buildContext($resolved, $environment, $config, $adapter);
+            $result = $executor->execute($resolved, $context);
         }
 
-        $hookRunner = new HookRunner();
-        $executor = new CommandExecutor(new CommandLoader());
-        $executor->setHooks(
-            $hookRunner->loadBeforeHooks(),
-            $hookRunner->loadAfterHooks(),
-        );
+        foreach ($hookRunner->loadShutdownHooks() as $hook) {
+            try {
+                $hook($context);
+            } catch (\Throwable) {
+            }
+        }
 
-        $context = $this->buildContext($resolved, $environment, $config, $adapter);
-
-        return $executor->execute($resolved, $context);
+        return $result;
     }
 
     private function buildContext(ResolvedCommand $resolved, Environment $environment, Config $config, ?object $adapter = null): Context
@@ -467,6 +484,13 @@ final class Application
         }
 
         $helperLoader = new HelperLoader();
+        $logger = $this->container->has(LoggerInterface::class)
+            ? $this->container->get(LoggerInterface::class)
+            : null;
+
+        if (!$logger instanceof LoggerInterface) {
+            $logger = null;
+        }
 
         return new Context(
             config: $config,
@@ -477,6 +501,7 @@ final class Application
             home: $home,
             frameworkAdapter: $adapter,
             helperLoader: $helperLoader,
+            logger: $logger,
         );
     }
 
