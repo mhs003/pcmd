@@ -20,9 +20,9 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 
 | Area | Status |
 |------|--------|
-| §2 CLI Syntax | ✅ Mostly implemented. Dry-run not wired. Suggestions work. |
-| §3 Command Discovery | ✅ Implemented (recursive scan, ignore patterns, duplicate detection, caching) |
-| §4 Environment Detection | ✅ Implemented (Generic + Laravel; directory walk-up) |
+| §2 CLI Syntax | ✅ Implemented (global options, suggestions, exit codes 0-9/130 wired correctly) |
+| §3 Command Discovery | ✅ Implemented (recursive scan, ignore patterns, duplicate detection, caching, plugin commands) |
+| §4 Environment Detection | ✅ Implemented (Generic + Laravel; directory walk-up; plugin detectors) |
 | §5 Command Resolution | ✅ Implemented (normalize, alias, env check, validation, suggestions) |
 | §6 Command Lifecycle | ✅ Implemented (bootstrap, context, hooks, execute, cleanup, exit) |
 | §7 Context API | ✅ Implemented (cwd, root, home, temp, arg, option, terminal, fs, process, log, table, spinner, progress, helper) |
@@ -32,13 +32,15 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 | §11 General Commands | ✅ Implemented (3 bundled example commands: json:pretty, file:hash, git:cleanup) |
 | §12 Laravel Commands | ✅ Implemented (LaravelAdapter, example commands for Eloquent/Artisan/cache/queue, $ctx->laravel() returns adapter) |
 | §13 Help System | ✅ Implemented (auto-generated argument/option docs, examples, usage) |
-| §14 Exit Codes | ✅ Implemented (0-9, 130 all wired correctly) |
+| §14 Exit Codes | ✅ Implemented (0-9, 130 all wired correctly; unknown command returns 2) |
 | §15 Errors | ✅ Implemented (typed exceptions, suggestion on unknown commands, --debug mode with stack traces) |
 | §16 Logging | ✅ Implemented (PSR-3 style, multi-level, secret masking) |
 | §17 Caching | ✅ Implemented (mtime-based file change detection, auto-invalidation) |
 | §18 Security | ⚠️ Not audited; basic confirmation in place |
 | §19 Examples | ✅ Implemented (8 bundled example commands shipped in resources/commands/: 3 general + 5 Laravel; publish:commands built-in) |
-| §20 Appendix | ✅ Reserved names and exit codes match implementation |
+| §20 Plugin Architecture | ✅ Implemented (PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors) |
+| §21 Testing | ✅ Implemented (90 unit tests + integration + E2E = 139 tests across 22 files; PHPUnit configured; Unit/Integration/EndToEnd suites) |
+| §22 Appendix | ✅ Reserved names and exit codes match implementation |
 
 ---
 

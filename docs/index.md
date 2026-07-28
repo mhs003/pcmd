@@ -19,10 +19,7 @@ pcmd is a standalone CLI that lets you write reusable commands once and use them
 
 ```bash
 # Install
-git clone https://github.com/your-org/pcmd.git
-cd pcmd
-composer install
-ln -s "$PWD/bin/pcmd" ~/.local/bin/pcmd
+curl -fsSL https://raw.githubusercontent.com/your-org/pcmd/main/install.sh | bash
 
 # See what's available
 pcmd list

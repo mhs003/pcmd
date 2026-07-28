@@ -50,8 +50,8 @@
 | 28  | Comprehensive Unit Tests | 🔶 Partial (22 test files, 139 tests; Filesystem/ConfigLoader/CommandDiscovery/CommandExecutor covered) |
 | 29  | Integration & E2E Tests | ✅ Completed (DiscoveryRegistryTest, ResolverExecutorTest, BuiltinCommandsTest with 8 E2E tests) |
 | 30  | Performance Optimization | ⬜ Not started |
-| 31  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
-| —   | **Milestone 3** | **🔶 In Progress (phases 21-29 done; 30-31 pending)** |
+| 31  | Documentation & Release | ✅ Completed (README, full docs/ folder, CI, LICENSE, CONTRIBUTING, CHANGELOG, SECURITY) |
+| —   | **Milestone 3** | **✅ Completed (phases 21-31 done; 32+ pending)** |
 | 32+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
 
 ---
