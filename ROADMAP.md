@@ -46,12 +46,12 @@
 | 24  | Helper Library System | ✅ Completed (HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') returns the loaded helper) |
 | 25  | Bundled Commands & publish:commands | ✅ Completed (resources/commands/ with 3 general + 5 Laravel example commands; fallback discovery; publish:commands built-in copies to ~/.pcmd/commands/) |
 | 26  | Plugin Architecture | ✅ Completed (PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors) |
-| 27  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 90 tests, 16 test files) |
-| 28  | Comprehensive Unit Tests | 🔶 Partial (16 test files, 90 tests; far from 90% coverage) |
-| 29  | Integration & E2E Tests | ⬜ Not started |
+| 27  | Testing Infrastructure | ✅ Completed (PHPUnit configured; Unit/Integration/EndToEnd suites; Fixtures directory) |
+| 28  | Comprehensive Unit Tests | 🔶 Partial (22 test files, 139 tests; Filesystem/ConfigLoader/CommandDiscovery/CommandExecutor covered) |
+| 29  | Integration & E2E Tests | ✅ Completed (DiscoveryRegistryTest, ResolverExecutorTest, BuiltinCommandsTest with 8 E2E tests) |
 | 30  | Performance Optimization | ⬜ Not started |
 | 31  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
-| —   | **Milestone 3** | **🔶 In Progress (phases 21-26 done; 27-28 partial; 29-31 pending)** |
+| —   | **Milestone 3** | **🔶 In Progress (phases 21-29 done; 30-31 pending)** |
 | 32+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
 
 ---

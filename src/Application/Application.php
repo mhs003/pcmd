@@ -86,8 +86,12 @@ final class Application
             $resolved = $this->resolveCommand($registry, $environment);
 
             if ($resolved === null) {
-                $this->printHelp($registry);
-                return 0;
+                if ($this->argvParser->hasOption('help') || $this->argvParser->commandName() === '') {
+                    $this->printHelp($registry);
+                    return 0;
+                }
+
+                return 2;
             }
 
             return $this->executeCommand($resolved, $environment, $config);
