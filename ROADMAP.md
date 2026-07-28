@@ -41,16 +41,16 @@
 | 20  | Built-in Commands | ✅ Completed (help, list, version, env, doctor, cache:clear, cache:rebuild) |
 | —   | **Milestone 2** | **✅ Completed** |
 | 21  | General Command API | ✅ Completed (Argument/Option builders, InputValidator, type/file/regex/validation chain) |
-| 22  | Laravel Adapter | 🔶 Partial (LaravelAdapter exists; bootstraps via vendor/autoload.php, bootstrap/app.php) |
-| 23  | Laravel Command API | 🔶 Partial ($ctx->laravel() returns adapter; db/cache/queue/config/events/storage exposed) |
+| 22  | Laravel Adapter | ✅ Completed (LaravelAdapter bootstraps, exposes app/db/cache/config/queue/events/storage/artisan/version; unit tests for boot/error/state paths) |
+| 23  | Laravel Command API | ✅ Completed (6 example commands shipped: db:truncate, search:reindex, replace-user, users:create-admin, cache:flush, job:dispatch) |
 | 24  | Helper Library System | ✅ Completed (HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') returns the loaded helper) |
 | 25  | Plugin Architecture | ⬜ Not started |
-| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 79 tests, 13 test files) |
-| 27  | Comprehensive Unit Tests | 🔶 Partial (13 test files, 79 tests; far from 90% coverage) |
+| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 90 tests, 16 test files) |
+| 27  | Comprehensive Unit Tests | 🔶 Partial (16 test files, 90 tests; far from 90% coverage) |
 | 28  | Integration & E2E Tests | ⬜ Not started |
 | 29  | Performance Optimization | ⬜ Not started |
 | 30  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
-| —   | **Milestone 3** | **🔶 In Progress** |
+| —   | **Milestone 3** | **🔶 In Progress (phases 22-23 done; 24 done; 25/28/29 pending; 26-27 partial; 30 partial)** |
 | 31+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
 
 ---
@@ -1781,11 +1781,12 @@ It now supports:
 
 Additional implemented features beyond Phase 20:
 - ✅ Full Argument/Option builder API with validation chain
-- ✅ LaravelAdapter (bootstraps Illuminate, exposes db/cache/config/queue/events/storage)
+- ✅ LaravelAdapter (bootstraps Illuminate, exposes db/cache/config/queue/events/storage/artisan)
+- ✅ 6 shipped Laravel example commands (db:truncate, search:reindex, replace-user, users:create-admin, cache:flush, job:dispatch)
 - ✅ --debug mode (full exception details, stack traces, SQL context)
 - ✅ GitHub Actions CI, MIT LICENSE, .editorconfig
 - ✅ Professional user documentation (14 files in docs/)
-- ✅ 79 tests across 13 test files
+- ✅ 90 tests across 16 test files
 
 ---
 

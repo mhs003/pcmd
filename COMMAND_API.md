@@ -30,7 +30,7 @@ This document defines the **target public API** for writing pcmd commands. Below
 | §11 Process API | ✅ Implemented | run/capture/stream/cwd/timeout/env; exitCode/stdout/stderr/successful/failed |
 | §12 Logger API | ✅ Implemented | debug/info/notice/warning/error/critical with structured context |
 | §13 Configuration API | ✅ Implemented | get/has/bool/int/string/array with dot-notation |
-| §14 Laravel Adapter API | 🔶 Partial | LaravelAdapter implemented; $ctx->laravel() returns adapter inside Laravel projects |
+| §14 Laravel Adapter API | ✅ Implemented | LaravelAdapter with app/artisan/db/cache/config/queue/events/storage; 6 example commands shipped |
 | §15 Future Adapter API | ⬜ Not started | $ctx->symfony() etc. not available |
 | §16 Hook API | 🔶 Partial | HookRunner loads ~/.pcmd/hooks/. ->before() and ->after() on Command builder not wired. |
 | §17 Return Values | ✅ Implemented | return 0, return 1, throw exceptions all work |

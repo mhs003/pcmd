@@ -30,7 +30,7 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 | §9 Interactive Console | 🔶 Partial (ask/confirm/choice/secret work; tree not implemented) |
 | §10 Configuration | ✅ Implemented (immutable, dot-notation, typed getters, ~/.pcmd/config.php) |
 | §11 General Commands | 🔶 Partial (engine supports them; example commands not shipped) |
-| §12 Laravel Commands | 🔶 Partial (LaravelAdapter implemented; $ctx->laravel() returns adapter inside Laravel projects) |
+| §12 Laravel Commands | ✅ Implemented (LaravelAdapter, example commands for Eloquent/Artisan/cache/queue, $ctx->laravel() returns adapter) |
 | §13 Help System | ✅ Implemented (auto-generated argument/option docs, examples, usage) |
 | §14 Exit Codes | ✅ Implemented (0-9, 130 all wired correctly) |
 | §15 Errors | ✅ Implemented (typed exceptions, suggestion on unknown commands, --debug mode with stack traces) |
