@@ -48,6 +48,7 @@ final class Application
     private const RESERVED_COMMANDS = [
         'help', 'list', 'version', 'env', 'doctor',
         'cache:clear', 'cache:rebuild', 'config:show',
+        'publish:commands',
     ];
 
     private ArgvParser $argvParser;
@@ -156,6 +157,8 @@ final class Application
             }
         }
 
+        $this->registerBundledCommands($registry, $environment, $loader);
+
         return $registry;
     }
 
@@ -216,6 +219,139 @@ final class Application
             environment: 'generic',
         );
         $registry->register($cacheRebuild);
+
+        $publish = new CommandMetadata(
+            name: 'publish:commands',
+            file: '',
+            description: 'Publish bundled commands to ~/.pcmd/commands/',
+            environment: 'generic',
+        );
+        $registry->register($publish);
+    }
+
+    private function resourcePath(): string
+    {
+        return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'commands';
+    }
+
+    private function registerBundledCommands(CommandRegistry $registry, Environment $environment, CommandLoader $loader): void
+    {
+        $resourceDir = $this->resourcePath();
+        $scanner = new DirectoryScanner();
+
+        $generalDir = $resourceDir . DIRECTORY_SEPARATOR . 'general';
+
+        if (is_dir($generalDir)) {
+            foreach ($scanner->scan($generalDir) as $file) {
+                if ($registry->exists($file['name'])) {
+                    continue;
+                }
+
+                try {
+                    $metadata = new CommandMetadata(
+                        name: $file['name'],
+                        file: $file['path'],
+                        description: '',
+                        environment: 'generic',
+                    );
+
+                    $registry->register($metadata);
+                    $loader->loadMetadata($metadata);
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        if ($environment->type() === 'generic') {
+            return;
+        }
+
+        $envDir = $resourceDir . DIRECTORY_SEPARATOR . $environment->type();
+
+        if (!is_dir($envDir)) {
+            return;
+        }
+
+        foreach ($scanner->scan($envDir) as $file) {
+            if ($registry->exists($file['name'])) {
+                continue;
+            }
+
+            try {
+                $metadata = new CommandMetadata(
+                    name: $file['name'],
+                    file: $file['path'],
+                    description: '',
+                    environment: $environment->type(),
+                );
+
+                $registry->register($metadata);
+                $loader->loadMetadata($metadata);
+            } catch (\Throwable) {
+            }
+        }
+    }
+
+    private function publishBundledCommands(Context $ctx): int
+    {
+        $resourceDir = $this->resourcePath();
+        $home = $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'] ?? '/tmp';
+
+        if (!is_string($home)) {
+            $home = '/tmp';
+        }
+
+        $userDir = $home . DIRECTORY_SEPARATOR . '.pcmd' . DIRECTORY_SEPARATOR . 'commands';
+        $force = $ctx->option('force') === true;
+        $group = $ctx->option('group');
+
+        if ($group !== null && !in_array($group, ['general', 'laravel'], true)) {
+            $ctx->error('Invalid group. Allowed: general, laravel.');
+            return 4;
+        }
+
+        $groups = $group !== null ? [$group] : ['general', 'laravel'];
+        $published = 0;
+        $skipped = 0;
+
+        foreach ($groups as $g) {
+            $srcDir = $resourceDir . DIRECTORY_SEPARATOR . $g;
+
+            if (!is_dir($srcDir)) {
+                continue;
+            }
+
+            $scanner = new DirectoryScanner();
+            $files = $scanner->scan($srcDir);
+
+            foreach ($files as $file) {
+                $relative = substr($file['path'], strlen($srcDir) + 1);
+                $targetPath = $userDir . DIRECTORY_SEPARATOR . $g . DIRECTORY_SEPARATOR . $relative;
+                $targetDir = dirname($targetPath);
+
+                if (file_exists($targetPath) && !$force) {
+                    $skipped++;
+                    continue;
+                }
+
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0755, true);
+                }
+
+                copy($file['path'], $targetPath);
+                $ctx->info('Published: ' . $g . '/' . $relative);
+                $published++;
+            }
+        }
+
+        $ctx->newline();
+        $ctx->success("Published {$published} command(s).");
+
+        if ($skipped > 0) {
+            $ctx->warn("{$skipped} already exist(s). Use --force to overwrite.");
+        }
+
+        return 0;
     }
 
     private function resolveCommand(CommandRegistry $registry, Environment $environment): ?ResolvedCommand
@@ -286,6 +422,9 @@ final class Application
                 $cache = new DiscoveryCache();
                 $cmd = new CacheCommand($cache);
                 return $cmd->rebuild($ctx);
+            },
+            'publish:commands' => function (Context $ctx) {
+                return $this->publishBundledCommands($ctx);
             },
         ];
 
@@ -363,6 +502,8 @@ final class Application
             } catch (\Throwable) {
             }
         }
+
+        $this->registerBundledCommands($registry, $env, $loader);
 
         return $registry;
     }

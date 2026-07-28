@@ -118,6 +118,42 @@ pcmd cache:rebuild
 
 Clears and prepares for a fresh cache rebuild.
 
+### publish:commands
+
+Publish bundled commands to `~/.pcmd/commands/` so you can customize or remove them:
+
+```bash
+pcmd publish:commands                  # publish all bundled commands
+pcmd publish:commands --group=laravel  # only Laravel commands
+pcmd publish:commands --force          # overwrite existing user copies
+```
+
+Bundled commands live in the app's `resources/commands/` directory. They are available automatically on every install — no publishing required. Use `publish:commands` only if you want to modify or delete them.
+
+## Bundled Commands
+
+pcmd ships with the following example commands in `resources/commands/`. They are discovered automatically and are always available (user commands in `~/.pcmd/commands/` take precedence):
+
+**General:**
+
+| Command | Description |
+|---------|-------------|
+| `json:pretty` | Pretty-print JSON from a file or stdin |
+| `file:hash` | Compute file hash (sha256, md5, etc.) |
+| `git:cleanup` | Delete merged local branches |
+
+**Laravel (only in Laravel projects):**
+
+| Command | Description |
+|---------|-------------|
+| `db:truncate` | Truncate all database tables |
+| `search:reindex` | Reindex search (calls scout:import) |
+| `users:create-admin` | Create an admin user using Eloquent |
+| `cache:flush` | Flush all application caches via Artisan |
+| `job:dispatch` | Dispatch a job to the queue |
+
+To customize these, run `pcmd publish:commands` to copy them into `~/.pcmd/commands/`.
+
 ## Exit Codes
 
 pcmd commands return the following exit codes:

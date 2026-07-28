@@ -12,6 +12,7 @@ pcmd is a standalone CLI that lets you write reusable commands once and use them
 - **Self-documenting** — Every command exposes help automatically from its metadata.
 - **Lazy loaded** — Command files are included only when executed, not at startup.
 - **Cached discovery** — Filesystem scans are cached with mtime-based invalidation.
+- **Bundled commands** — Common utilities (JSON, file, git, Laravel) ship with the app and are discovered automatically.
 - **Shared helpers** — Reusable utility libraries loaded on demand via `$ctx->helper('name')`.
 
 ## Quick Start
@@ -42,6 +43,7 @@ pcmd json:pretty data.json
 - [Configuration](configuration.md) — Configure pcmd behavior
 - [Debugging](debugging.md) — Error handling and troubleshooting
 - [Helpers](helpers.md) — Shared helper libraries
+- [Bundled Commands](usage.md#bundled-commands) — Example commands shipped with pcmd
 
 ## Requirements
 

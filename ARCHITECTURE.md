@@ -40,7 +40,8 @@ This architecture document describes the **target design** for v1.0. Below is th
 | §19 Hook System | ✅ Implemented | HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php |
 | §20 Helper System | ✅ Implemented | HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') access |
 | §21 Plugin Architecture | ⬜ Not started | Directory exists; no loading |
-| §21 Error Handling | ✅ Implemented | Typed exceptions, centralized formatter, --debug mode with stack traces and SQL context |
+| §21 Bundled Commands | ✅ Implemented | resources/commands/ with general + Laravel examples; fallback discovery (user commands win); publish:commands built-in |
+| §22 Error Handling | ✅ Implemented | Typed exceptions, centralized formatter, --debug mode with stack traces and SQL context |
 
 The dependency direction rules (§1, §22) are followed throughout the implemented code.
 

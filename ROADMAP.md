@@ -44,14 +44,15 @@
 | 22  | Laravel Adapter | ✅ Completed (LaravelAdapter bootstraps, exposes app/db/cache/config/queue/events/storage/artisan/version; unit tests for boot/error/state paths) |
 | 23  | Laravel Command API | ✅ Completed (6 example commands shipped: db:truncate, search:reindex, replace-user, users:create-admin, cache:flush, job:dispatch) |
 | 24  | Helper Library System | ✅ Completed (HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') returns the loaded helper) |
-| 25  | Plugin Architecture | ⬜ Not started |
-| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 90 tests, 16 test files) |
-| 27  | Comprehensive Unit Tests | 🔶 Partial (16 test files, 90 tests; far from 90% coverage) |
-| 28  | Integration & E2E Tests | ⬜ Not started |
-| 29  | Performance Optimization | ⬜ Not started |
-| 30  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
-| —   | **Milestone 3** | **🔶 In Progress (phases 22-23 done; 24 done; 25/28/29 pending; 26-27 partial; 30 partial)** |
-| 31+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
+| 25  | Bundled Commands & publish:commands | ✅ Completed (resources/commands/ with 3 general + 5 Laravel example commands; fallback discovery; publish:commands built-in copies to ~/.pcmd/commands/) |
+| 26  | Plugin Architecture | ⬜ Not started |
+| 27  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 90 tests, 16 test files) |
+| 28  | Comprehensive Unit Tests | 🔶 Partial (16 test files, 90 tests; far from 90% coverage) |
+| 29  | Integration & E2E Tests | ⬜ Not started |
+| 30  | Performance Optimization | ⬜ Not started |
+| 31  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
+| —   | **Milestone 3** | **🔶 In Progress (phases 21-25 done; 26 partial; 27-28 partial; 29-31 pending)** |
+| 32+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
 
 ---
 

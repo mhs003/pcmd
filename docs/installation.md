@@ -55,6 +55,18 @@ pcmd stores its data in `~/.pcmd/`:
 
 The `commands/` directory is created on first run if it doesn't exist. You can place command files into it at any time.
 
+## Bundled Commands
+
+pcmd ships with example commands in `resources/commands/` (general + Laravel). These are discovered automatically on every install — no setup required. User commands in `~/.pcmd/commands/` take precedence over bundled ones.
+
+To customize or remove bundled commands, publish them to your home directory:
+
+```bash
+pcmd publish:commands
+```
+
+After publishing, you can edit or delete any command file in `~/.pcmd/commands/`.
+
 ## Verifying
 
 Run the built-in diagnostics to verify everything is working:
