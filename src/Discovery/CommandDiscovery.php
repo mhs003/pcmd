@@ -18,6 +18,9 @@ final class CommandDiscovery
     private string $homeDir;
     private DiscoveryCache $cache;
 
+    /** @var list<string> */
+    private array $pluginDirs = [];
+
     public function __construct(?DirectoryScanner $scanner = null, ?string $homeDir = null, ?DiscoveryCache $cache = null)
     {
         $this->scanner = $scanner ?? new DirectoryScanner();
@@ -31,6 +34,14 @@ final class CommandDiscovery
         $this->cache = $cache ?? new DiscoveryCache();
     }
 
+    /**
+     * @param list<string> $dirs
+     */
+    public function setPluginDirectories(array $dirs): void
+    {
+        $this->pluginDirs = $dirs;
+    }
+
     public function discover(Environment $environment): CommandRegistry
     {
         $envName = $environment->type();
@@ -41,6 +52,11 @@ final class CommandDiscovery
         foreach ($dirs as $dir) {
             $fullPath = $this->homeDir . DIRECTORY_SEPARATOR . $dir;
             $files = $this->scanner->scan($fullPath);
+            $allFiles = array_merge($allFiles, $files);
+        }
+
+        foreach ($this->pluginDirs as $pluginDir) {
+            $files = $this->scanner->scan($pluginDir);
             $allFiles = array_merge($allFiles, $files);
         }
 

@@ -39,7 +39,7 @@ This architecture document describes the **target design** for v1.0. Below is th
 | §16 Laravel Adapter | ✅ Implemented | LaravelAdapter with boot, ArtisanBridge, db/cache/config/queue/events/storage/version/environment; 6 example commands shipped |
 | §19 Hook System | ✅ Implemented | HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php |
 | §20 Helper System | ✅ Implemented | HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') access |
-| §21 Plugin Architecture | ⬜ Not started | Directory exists; no loading |
+| §21 Plugin Architecture | ✅ Implemented | `src/Plugin/` — PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors |
 | §21 Bundled Commands | ✅ Implemented | resources/commands/ with general + Laravel examples; fallback discovery (user commands win); publish:commands built-in |
 | §22 Error Handling | ✅ Implemented | Typed exceptions, centralized formatter, --debug mode with stack traces and SQL context |
 
@@ -1665,79 +1665,77 @@ Hooks execute in deterministic order.
 
 # 20. Plugin Architecture
 
-## Vision
+## Overview
 
-Everything beyond the core should be pluggable.
-
-The executable should remain small.
+Plugins allow external packages to extend pcmd without modifying the core. A plugin is a directory under `~/.pcmd/plugins/` containing a `pcmd.json` manifest and optional subdirectories for commands, helpers, hooks, and environment detectors.
 
 ---
 
-## Plugin Categories
-
-Examples
+## Components
 
 ```
-Environment Plugins
-
-Command Packs
-
-Helper Libraries
-
-Framework Adapters
-
-Terminal Themes
-
-Discovery Providers
+src/Plugin/
+├── PluginManager.php    — orchestrates lifecycle
+├── PluginLoader.php     — scans ~/.pcmd/plugins/ for manifests
+├── PluginManifest.php   — immutable value object from pcmd.json
+└── PluginException.php  — typed exception
 ```
 
 ---
 
-## Discovery
+## Manifest Format
 
-Plugins may eventually reside in
+Each plugin directory contains a `pcmd.json`:
+
+```json
+{
+    "name": "my-plugin",
+    "version": "1.0.0",
+    "description": "My plugin"
+}
+```
+
+---
+
+## Plugin Directory Layout
 
 ```
-~/.pcmd/plugins/
+~/.pcmd/plugins/<name>/
+├── pcmd.json              # Required manifest
+├── commands/               # Command files (scanned automatically)
+├── helpers/                # Helper files ($ctx->helper())
+├── hooks/                  # before.php, after.php, shutdown.php
+└── detectors/              # PHP files returning EnvironmentDetectorInterface
 ```
 
-Each plugin is independently discoverable.
+---
+
+## Integration Points
+
+Plugins integrate at four points:
+
+1. **Commands** — `PluginManager::commandDirectories()` returns paths to plugin `commands/` dirs; passed to `CommandDiscovery::setPluginDirectories()`
+2. **Hooks** — `PluginManager::hookCallables()` loads before/after/shutdown hooks; merged with user hooks in `Application::executeCommand()`
+3. **Detectors** — `PluginManager::detectors()` loads detector instances; registered alongside built-in detectors
+4. **Helpers** — Plugin `helpers/` dirs accessible via `$ctx->helper()` through standard helper infrastructure
 
 ---
 
-## Loading
+## Loading Order
 
-Plugin loading occurs after configuration but before command discovery.
-
-This allows plugins to contribute
-
-- detectors
-- commands
-- helpers
-- adapters
-
----
-
-## Isolation
-
-Plugins should communicate through documented interfaces only.
-
-They should never depend on internal implementation details.
-
----
-
-## Future Package Format
-
-The exact plugin packaging format is intentionally unspecified.
-
-The architecture should allow future installation methods such as
-
-- Composer packages
-- Git repositories
-- ZIP archives
-- official plugin registry
-
-without redesigning the core application.
+```
+Configuration
+    ↓
+Plugin Manager (loads manifests)
+    ↓
+Environment Detection (includes plugin detectors)
+    ↓
+Command Discovery (includes plugin command dirs)
+    ↓
+Command Resolution
+    ↓
+Execution (includes plugin hooks)
+```
 
 ---
 

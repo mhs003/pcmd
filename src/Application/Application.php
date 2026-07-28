@@ -29,6 +29,7 @@ use Pcmd\Exceptions\ConfigurationException;
 use Pcmd\Execution\CommandExecutor;
 use Pcmd\Execution\CommandLoader;
 use Pcmd\Execution\HookRunner;
+use Pcmd\Plugin\PluginManager;
 use Pcmd\Filesystem\Filesystem;
 use Pcmd\Logging\Logger;
 use Pcmd\Process\ProcessManager;
@@ -54,12 +55,14 @@ final class Application
     private ArgvParser $argvParser;
     private Output $output;
     private ContainerInterface $container;
+    private PluginManager $pluginManager;
 
     public function __construct(?ArgvParser $argvParser = null, ?Output $output = null)
     {
         $this->argvParser = $argvParser ?? new ArgvParser();
         $this->output = $output ?? new Output();
         $this->container = new Container();
+        $this->pluginManager = new PluginManager();
     }
 
     /**
@@ -77,6 +80,7 @@ final class Application
         try {
             $config = $this->loadConfig();
             $this->registerServices($config);
+            $this->pluginManager->load();
             $environment = $this->detectEnvironment();
             $registry = $this->buildCommandRegistry($environment);
             $resolved = $this->resolveCommand($registry, $environment);
@@ -123,6 +127,10 @@ final class Application
             new GenericDetector(),
         ];
 
+        foreach ($this->pluginManager->detectors() as $pluginDetector) {
+            $detectors[] = $pluginDetector;
+        }
+
         $manager = new EnvironmentManager($detectors);
 
         $cwd = getcwd();
@@ -141,6 +149,7 @@ final class Application
         $this->registerBuiltinCommands($registry, $environment);
 
         $discovery = new CommandDiscovery(new DirectoryScanner());
+        $discovery->setPluginDirectories($this->pluginManager->commandDirectories());
         $discovered = $discovery->discover($environment);
         $loader = new CommandLoader();
 
@@ -435,6 +444,23 @@ final class Application
             },
         ];
 
+        $pluginHooks = $this->pluginManager->hookCallables();
+
+        $beforeHooks = array_merge(
+            $hookRunner->loadBeforeHooks(),
+            $pluginHooks['before'],
+        );
+
+        $afterHooks = array_merge(
+            $hookRunner->loadAfterHooks(),
+            $pluginHooks['after'],
+        );
+
+        $shutdownHooks = array_merge(
+            $hookRunner->loadShutdownHooks(),
+            $pluginHooks['shutdown'],
+        );
+
         $result = null;
         $context = null;
 
@@ -443,16 +469,13 @@ final class Application
             $result = $builtins[$commandName]($context);
         } else {
             $executor = new CommandExecutor(new CommandLoader());
-            $executor->setHooks(
-                $hookRunner->loadBeforeHooks(),
-                $hookRunner->loadAfterHooks(),
-            );
+            $executor->setHooks($beforeHooks, $afterHooks);
 
             $context = $this->buildContext($resolved, $environment, $config, $adapter);
             $result = $executor->execute($resolved, $context);
         }
 
-        foreach ($hookRunner->loadShutdownHooks() as $hook) {
+        foreach ($shutdownHooks as $hook) {
             try {
                 $hook($context);
             } catch (\Throwable) {
@@ -512,6 +535,7 @@ final class Application
         $this->registerBuiltinCommands($registry, $env);
 
         $discovery = new CommandDiscovery(new DirectoryScanner());
+        $discovery->setPluginDirectories($this->pluginManager->commandDirectories());
         $discovered = $discovery->discover($env);
         $loader = new CommandLoader();
 

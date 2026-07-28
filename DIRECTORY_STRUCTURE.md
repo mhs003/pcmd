@@ -185,6 +185,7 @@ src/
 ├── Filesystem/
 ├── Framework/
 ├── Logging/
+├── Plugin/
 ├── Process/
 ├── Registry/
 ├── Resolution/
@@ -607,7 +608,41 @@ External process execution.
 
 ---
 
-# 19. Registry Directory
+# 19. Plugin Directory
+
+```
+src/Plugin/
+```
+
+Contains the plugin subsystem.
+
+---
+
+Examples
+
+```
+PluginManager.php
+
+PluginLoader.php
+
+PluginManifest.php
+
+PluginException.php
+```
+
+---
+
+## Responsibilities
+
+Plugin discovery from `~/.pcmd/plugins/`.
+
+Manifest loading and validation.
+
+Integration of plugin commands, hooks, and detectors into the application lifecycle.
+
+---
+
+# 20. Registry Directory
 
 ```
 src/Registry/

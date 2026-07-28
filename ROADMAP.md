@@ -45,13 +45,13 @@
 | 23  | Laravel Command API | ✅ Completed (6 example commands shipped: db:truncate, search:reindex, replace-user, users:create-admin, cache:flush, job:dispatch) |
 | 24  | Helper Library System | ✅ Completed (HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') returns the loaded helper) |
 | 25  | Bundled Commands & publish:commands | ✅ Completed (resources/commands/ with 3 general + 5 Laravel example commands; fallback discovery; publish:commands built-in copies to ~/.pcmd/commands/) |
-| 26  | Plugin Architecture | ⬜ Not started |
+| 26  | Plugin Architecture | ✅ Completed (PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors) |
 | 27  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 90 tests, 16 test files) |
 | 28  | Comprehensive Unit Tests | 🔶 Partial (16 test files, 90 tests; far from 90% coverage) |
 | 29  | Integration & E2E Tests | ⬜ Not started |
 | 30  | Performance Optimization | ⬜ Not started |
 | 31  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
-| —   | **Milestone 3** | **🔶 In Progress (phases 21-25 done; 26 partial; 27-28 partial; 29-31 pending)** |
+| —   | **Milestone 3** | **🔶 In Progress (phases 21-26 done; 27-28 partial; 29-31 pending)** |
 | 32+ | Framework SDKs, Package Manager, etc. | **⬜ Pending** |
 
 ---
@@ -2075,7 +2075,7 @@ Commands can reuse helper libraries without duplication.
 
 ---
 
-# 25. Plugin Architecture (v1)
+# 26. Plugin Architecture (v1)
 
 ## Goal
 
@@ -2083,21 +2083,16 @@ Allow external packages to extend pcmd.
 
 ---
 
-## Tasks
+## ✅ Completed
 
-Design plugin manifest.
-
-Implement
-
-```
-PluginManager
-
-PluginLoader
-
-PluginManifest
-```
-
----
+- PluginManager orchestrates plugin lifecycle (load, command dirs, hook callables, detectors)
+- PluginLoader scans `~/.pcmd/plugins/` for `pcmd.json` manifests
+- PluginManifest represents a plugin's metadata and provides access to its `commands/`, `helpers/`, `hooks/`, and `detectors/` directories
+- PluginException for typed error handling
+- Application loads plugins after configuration, before environment detection
+- CommandDiscovery accepts plugin command directories via `setPluginDirectories()`
+- Plugin hooks are merged with user hooks in the execution pipeline
+- Plugin detectors are registered alongside built-in detectors
 
 ## Plugin Capabilities
 
@@ -2114,7 +2109,15 @@ Plugins may provide
 ## Plugin Directory
 
 ```
-~/.pcmd/plugins/
+~/.pcmd/plugins/<name>/
+├── pcmd.json              # { "name": "...", "version": "...", "description": "..." }
+├── commands/               # Plugin commands (scanned automatically)
+│   └── general/
+│       └── hello/
+│           └── world.php
+├── helpers/                # Plugin helpers (loaded via $ctx->helper())
+├── hooks/                  # before.php, after.php, shutdown.php
+└── detectors/              # PHP files returning EnvironmentDetectorInterface
 ```
 
 ---
@@ -2127,11 +2130,11 @@ Working plugin loader.
 
 ## Acceptance Criteria
 
-Plugins install without modifying core.
+Plugins install without modifying core. ✅
 
-Plugins discovered automatically.
+Plugins discovered automatically. ✅
 
-Plugins isolated from one another.
+Plugins isolated from one another. ✅
 
 ---
 
