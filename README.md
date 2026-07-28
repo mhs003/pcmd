@@ -167,6 +167,7 @@ $ctx->fs();               // Filesystem operations
 $ctx->process();          // External process execution
 $ctx->log();              // PSR-3 compatible logger
 $ctx->laravel();          // Laravel adapter (null outside Laravel)
+$ctx->helper('name');     // Load a helper from ~/.pcmd/helpers/
 ```
 
 ## Environment Detection

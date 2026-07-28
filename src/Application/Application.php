@@ -37,6 +37,7 @@ use Pcmd\Registry\CommandRegistry;
 use Pcmd\Resolution\CommandResolver;
 use Pcmd\Resolution\ResolvedCommand;
 use Pcmd\Support\Container;
+use Pcmd\Support\HelperLoader;
 use Pcmd\Terminal\Terminal;
 
 final class Application
@@ -326,6 +327,8 @@ final class Application
             $home = '/tmp';
         }
 
+        $helperLoader = new HelperLoader();
+
         return new Context(
             config: $config,
             terminal: $terminal,
@@ -334,6 +337,7 @@ final class Application
             cwd: $cwd,
             home: $home,
             frameworkAdapter: $adapter,
+            helperLoader: $helperLoader,
         );
     }
 

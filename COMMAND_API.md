@@ -23,7 +23,7 @@ This document defines the **target public API** for writing pcmd commands. Below
 | §4 Arguments | ✅ Implemented | ->argument(name, desc, callback) with Argument builder: optional, default, array, file, integer, regex, validate |
 | §5 Options | ✅ Implemented | ->option(name, desc, callback) with Option builder: shortcut, boolean/value, default, allowed, multiple, file, integer, regex |
 | §6 Validation | ✅ Implemented | ->required(), ->optional(), ->integer(), ->float(), ->boolean(), ->file(), ->directory(), ->readable(), ->writable(), ->regex(), ->validate() all work via InputValidator |
-| §7 Context API | ✅ Implemented | cwd/root/home/temp/environment/command/arguments/options/config |
+| §7 Context API | ✅ Implemented | cwd/root/home/temp/environment/command/arguments/options/config/helper/helpers |
 | §8 Terminal API | ✅ Implemented | info/success/warn/error/line/newline; progress/spinner/table implemented |
 | §9 Input API | ✅ Implemented | ask/confirm/secret/choice/multichoice; respects --no-interaction |
 | §10 Filesystem API | ✅ Implemented | read/write/copy/move/delete/exists/mkdir/walk/glob/tempFile/tempDirectory |

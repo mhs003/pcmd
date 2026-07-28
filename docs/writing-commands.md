@@ -260,6 +260,10 @@ return Command::make()
     });
 ```
 
+## Using Helpers
+
+Helpers are reusable PHP files in `~/.pcmd/helpers/` that any command can load via `$ctx->helper('name')`. See the [Helpers](helpers.md) guide for creating and using helper files.
+
 ## Reference
 
 - [Context API](reference/context-api.md) — Full Context reference

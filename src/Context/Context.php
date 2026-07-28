@@ -9,6 +9,7 @@ use Pcmd\Environment\Environment;
 use Pcmd\Exceptions\ValidationException;
 use Pcmd\Registry\CommandMetadata;
 use Pcmd\Resolution\ResolvedCommand;
+use Pcmd\Support\HelperLoader;
 use Pcmd\Terminal\Terminal;
 
 final class Context
@@ -20,6 +21,7 @@ final class Context
     private string $cwd;
     private string $home;
     private ?object $frameworkAdapter = null;
+    private ?HelperLoader $helperLoader = null;
 
     public function __construct(
         Config $config,
@@ -29,6 +31,7 @@ final class Context
         string $cwd,
         string $home,
         ?object $frameworkAdapter = null,
+        ?HelperLoader $helperLoader = null,
     ) {
         $this->config = $config;
         $this->terminal = $terminal;
@@ -37,6 +40,7 @@ final class Context
         $this->cwd = $cwd;
         $this->home = $home;
         $this->frameworkAdapter = $frameworkAdapter;
+        $this->helperLoader = $helperLoader;
     }
 
     public function cwd(): string
@@ -198,5 +202,28 @@ final class Context
     public function laravel(): ?object
     {
         return $this->frameworkAdapter;
+    }
+
+    public function helper(string $name): mixed
+    {
+        if ($this->helperLoader === null) {
+            throw new \Pcmd\Exceptions\PcmdException(
+                'Helper system is not available. Ensure HelperLoader is configured.',
+            );
+        }
+
+        return $this->helperLoader->load($name);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function helpers(): array
+    {
+        if ($this->helperLoader === null) {
+            return [];
+        }
+
+        return $this->helperLoader->loaded();
     }
 }

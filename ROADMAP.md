@@ -43,10 +43,10 @@
 | 21  | General Command API | ✅ Completed (Argument/Option builders, InputValidator, type/file/regex/validation chain) |
 | 22  | Laravel Adapter | 🔶 Partial (LaravelAdapter exists; bootstraps via vendor/autoload.php, bootstrap/app.php) |
 | 23  | Laravel Command API | 🔶 Partial ($ctx->laravel() returns adapter; db/cache/queue/config/events/storage exposed) |
-| 24  | Helper Library System | ⬜ Not started |
+| 24  | Helper Library System | ✅ Completed (HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') returns the loaded helper) |
 | 25  | Plugin Architecture | ⬜ Not started |
-| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 68 tests, 11 test files) |
-| 27  | Comprehensive Unit Tests | 🔶 Partial (11 test files, 68 tests; far from 90% coverage) |
+| 26  | Testing Infrastructure | 🔶 Partial (PHPUnit configured; 79 tests, 13 test files) |
+| 27  | Comprehensive Unit Tests | 🔶 Partial (13 test files, 79 tests; far from 90% coverage) |
 | 28  | Integration & E2E Tests | ⬜ Not started |
 | 29  | Performance Optimization | ⬜ Not started |
 | 30  | Documentation & Release | 🔶 Partial (README, full docs/ folder, CI, LICENSE; no CONTRIBUTING/CHANGELOG) |
@@ -1785,7 +1785,7 @@ Additional implemented features beyond Phase 20:
 - ✅ --debug mode (full exception details, stack traces, SQL context)
 - ✅ GitHub Actions CI, MIT LICENSE, .editorconfig
 - ✅ Professional user documentation (14 files in docs/)
-- ✅ 68 tests across 11 test files
+- ✅ 79 tests across 13 test files
 
 ---
 
@@ -2002,12 +2002,22 @@ Example commands
 without additional setup.
 
 ---
-
 # 24. Helper Library System
 
 ## Goal
 
 Provide reusable helper classes shared by commands.
+
+---
+
+## ✅ Completed
+
+- HelperLoader loads PHP files from `~/.pcmd/helpers/` on demand
+- Commands access helpers via `$ctx->helper('name')`
+- `$ctx->helpers()` returns list of loaded helper names
+- `HelperNotFoundException` for missing helper files
+- Lazy loading: files are `require`d only when first accessed, then cached in memory
+- No autoloading, no reflection, no namespace mapping — helpers are plain PHP files returning any value (object, array, callable, etc.)
 
 ---
 
@@ -2018,9 +2028,10 @@ Implement helper loading.
 Search
 
 ```
-~/.pcmd/helpers/
-```
 
+~/.pcmd/helpers/
+
+```
 ---
 
 ## Examples

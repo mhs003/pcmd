@@ -224,6 +224,27 @@ $config->array('plugins');        // array or null
 
 Dot notation provides nested access: `config.get('cache.enabled')`.
 
+## Helpers
+
+Shared helper libraries loaded from `~/.pcmd/helpers/`:
+
+```php
+$helper = $ctx->helper('database');
+$users = $helper->query('SELECT * FROM users');
+
+$git = $ctx->helper('git');
+$branch = $git['currentBranch']();
+```
+
+Helpers are loaded lazily — the file is `require`d only on first access, then cached in memory. A `HelperNotFoundException` is thrown if the file does not exist.
+
+```php
+// List helpers that have been loaded so far
+$loaded = $ctx->helpers();  // list<string>
+```
+
+See [Helpers](../helpers.md) for details on creating helper files.
+
 ## Laravel Integration
 
 ```php

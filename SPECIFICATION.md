@@ -25,7 +25,7 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 | §4 Environment Detection | ✅ Implemented (Generic + Laravel; directory walk-up) |
 | §5 Command Resolution | ✅ Implemented (normalize, alias, env check, validation, suggestions) |
 | §6 Command Lifecycle | ✅ Implemented (bootstrap, context, hooks, execute, cleanup, exit) |
-| §7 Context API | ✅ Implemented (cwd, root, home, temp, arg, option, terminal, fs, process, log, table, spinner, progress) |
+| §7 Context API | ✅ Implemented (cwd, root, home, temp, arg, option, terminal, fs, process, log, table, spinner, progress, helper) |
 | §8 Arguments & Options | ✅ Implemented (Argument/Option builders, InputValidator, type/file/regex/validation chain) |
 | §9 Interactive Console | 🔶 Partial (ask/confirm/choice/secret work; tree not implemented) |
 | §10 Configuration | ✅ Implemented (immutable, dot-notation, typed getters, ~/.pcmd/config.php) |
