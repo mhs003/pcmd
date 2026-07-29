@@ -57,6 +57,15 @@ $db = $laravel->db();
 // Query builder
 $users = $db->table('users')->where('active', true)->get();
 
+// Eloquent ORM (models are available after Laravel bootstraps)
+$user = new \App\Models\User();
+$user->name = 'Admin';
+$user->email = 'admin@example.com';
+$user->save();
+
+// Or querying with Eloquent
+$admins = \App\Models\User::where('role', 'admin')->get();
+
 // Raw queries
 $db->statement('UPDATE users SET active = ? WHERE id = ?', [false, 1]);
 

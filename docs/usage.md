@@ -118,6 +118,25 @@ pcmd cache:rebuild
 
 Clears and prepares for a fresh cache rebuild.
 
+### config:show
+
+Display the active configuration:
+
+```bash
+pcmd config:show
+```
+
+Output shows every configuration key and its value using dot notation:
+
+```
+Configuration:
+
+  colors: true
+  editor: code
+  cache.enabled: true
+  logging.enabled: false
+```
+
 ### publish:commands
 
 Publish bundled commands to `~/.pcmd/commands/` so you can customize or remove them:

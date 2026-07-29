@@ -93,6 +93,48 @@ return function (Context $ctx) {
 };
 ```
 
+## Command-Level Hooks
+
+In addition to file-based hooks, individual commands can register `before()` and `after()` hooks directly on the Command builder. These run alongside the file-based hooks — command-level before hooks execute after file-level before hooks, and command-level after hooks execute before file-level after hooks.
+
+```php
+return Command::make()
+    ->description('Process a file.')
+    ->before(function (Context $ctx) {
+        $ctx->info('Starting file processing...');
+    })
+    ->after(function (Context $ctx) {
+        $ctx->info('File processing complete.');
+    })
+    ->run(function (Context $ctx) {
+        // Command logic here
+        return 0;
+    });
+```
+
+### Execution Order
+
+```
+File Before Hooks
+    ↓
+Command Before Hooks
+    ↓
+Command callback
+    ↓
+Command After Hooks
+    ↓
+File After Hooks
+    ↓
+Shutdown Hooks
+```
+
+### When to Use Each
+
+| Approach | When to Use |
+|----------|-------------|
+| File hooks (`~/.pcmd/hooks/`) | Cross-cutting concerns that apply to every command (logging, metrics, guards) |
+| Command hooks (`->before()`/`->after()`) | Behavior specific to one command (setup, teardown, resource management) |
+
 ## Example: Production Guard
 
 ```php

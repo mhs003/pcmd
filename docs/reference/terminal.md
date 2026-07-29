@@ -51,6 +51,13 @@ $db = $ctx->choice('Select database', ['mysql', 'pgsql']);
 ```
 Presents a numbered list of options. Returns the selected value.
 
+### multichoice()
+```php
+$databases = $ctx->multichoice('Select databases', ['mysql', 'pgsql', 'sqlite']);
+// Returns ['mysql', 'pgsql'] (list of selected values)
+```
+Presents a numbered list of options. Accepts comma-separated numbers or values. Returns an array of selected values. Returns an empty array in non-interactive mode.
+
 ## Progress Bar
 
 ```php

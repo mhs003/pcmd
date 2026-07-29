@@ -196,6 +196,29 @@ return Command::make()
     });
 ```
 
+## Before / After Hooks
+
+Commands can register lifecycle hooks that run before and after the command callback:
+
+```php
+return Command::make()
+    ->description('Process a file.')
+    ->before(function (Context $ctx) {
+        $ctx->info('Starting...');
+    })
+    ->after(function (Context $ctx) {
+        $ctx->info('Done.');
+    })
+    ->run(function (Context $ctx) {
+        // Command logic
+        return 0;
+    });
+```
+
+Before hooks run after argument validation but before the command callback. After hooks run after the command callback completes. Multiple `before()` and `after()` calls can be chained — they execute in registration order.
+
+See [Hooks](hooks.md) for details on execution order and file-based hooks.
+
 ## Tags
 
 Add tags for future search and categorization:

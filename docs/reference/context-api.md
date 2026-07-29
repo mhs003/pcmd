@@ -98,6 +98,9 @@ $password = $ctx->secret('Enter password');
 
 $database = $ctx->choice('Select database', ['mysql', 'pgsql']);
 $database = $ctx->choice('Select database', ['mysql', 'pgsql'], 'mysql');
+
+$databases = $ctx->multichoice('Select databases', ['mysql', 'pgsql', 'sqlite']);
+// Returns ['mysql', 'pgsql'] (list of selected values)
 ```
 
 ## Progress Indicators
