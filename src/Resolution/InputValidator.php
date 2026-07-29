@@ -18,9 +18,33 @@ final class InputValidator
     public function validateArguments(array $definitions, array $rawArgs): array
     {
         $result = [];
+        $argIndex = 0;
 
-        foreach ($definitions as $i => $definition) {
-            $value = $rawArgs[$i] ?? null;
+        foreach ($definitions as $definition) {
+            if ($definition->isArray()) {
+                $values = array_slice($rawArgs, $argIndex);
+
+                if ($values === []) {
+                    if ($definition->isRequired()) {
+                        throw new ValidationException(sprintf(
+                            'Missing required argument: %s',
+                            $definition->name(),
+                        ));
+                    }
+
+                    $result[$definition->name()] = $definition->getDefault();
+                } else {
+                    foreach ($values as $value) {
+                        $this->validateValue($value, $definition);
+                    }
+
+                    $result[$definition->name()] = $values;
+                }
+
+                break;
+            }
+
+            $value = $rawArgs[$argIndex] ?? null;
 
             if ($value === null) {
                 if ($definition->isRequired()) {
@@ -31,11 +55,13 @@ final class InputValidator
                 }
 
                 $result[$definition->name()] = $definition->getDefault();
+                $argIndex++;
                 continue;
             }
 
             $this->validateValue($value, $definition);
             $result[$definition->name()] = $value;
+            $argIndex++;
         }
 
         return $result;
@@ -136,11 +162,7 @@ final class InputValidator
         $type = $definition instanceof Argument ? $definition->valueType() : $definition->valueType();
 
         if ($type === 'integer') {
-            if (!ctype_digit(ltrim($value, '-')) && !(is_numeric($value) && str_contains($value, '.'))) {
-                $this->throwTypeError($definition->name(), 'integer', $value);
-            }
-
-            if (!ctype_digit(ltrim($value, '-')) && is_numeric($value)) {
+            if (!ctype_digit(ltrim($value, '-')) && (!is_numeric($value) || str_contains($value, '.'))) {
                 $this->throwTypeError($definition->name(), 'integer', $value);
             }
         }
@@ -148,6 +170,12 @@ final class InputValidator
         if ($type === 'float') {
             if (!is_numeric($value)) {
                 $this->throwTypeError($definition->name(), 'float', $value);
+            }
+        }
+
+        if ($type === 'boolean') {
+            if (!in_array(strtolower($value), ['1', '0', 'true', 'false', 'yes', 'no'], true)) {
+                $this->throwTypeError($definition->name(), 'boolean', $value);
             }
         }
 

@@ -7,6 +7,7 @@ namespace Pcmd\Application;
 use Pcmd\CLI\ArgvParser;
 use Pcmd\CLI\Output;
 use Pcmd\Commands\CacheCommand;
+use Pcmd\Commands\ConfigCommand;
 use Pcmd\Commands\DoctorCommand;
 use Pcmd\Commands\EnvCommand;
 use Pcmd\Commands\HelpCommand;
@@ -240,6 +241,14 @@ final class Application
             environment: 'generic',
         );
         $registry->register($publish);
+
+        $configShow = new CommandMetadata(
+            name: 'config:show',
+            file: '',
+            description: 'Display active configuration',
+            environment: 'generic',
+        );
+        $registry->register($configShow);
     }
 
     private function resourcePath(): string
@@ -445,6 +454,10 @@ final class Application
             },
             'publish:commands' => function (Context $ctx) {
                 return $this->publishBundledCommands($ctx);
+            },
+            'config:show' => function (Context $ctx) {
+                $cmd = new ConfigCommand($ctx->config());
+                return $cmd->show($ctx);
             },
         ];
 

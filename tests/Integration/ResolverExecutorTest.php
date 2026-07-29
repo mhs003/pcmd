@@ -57,7 +57,6 @@ final class ResolverExecutorTest extends TestCase
     {
         $parser = new ArgvParser();
         $ref = new \ReflectionProperty(ArgvParser::class, 'commandName');
-        $ref->setAccessible(true);
         $ref->setValue($parser, $commandName);
 
         return $parser;

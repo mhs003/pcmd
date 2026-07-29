@@ -136,6 +136,61 @@ PHP
         unlink($commandFile);
     }
 
+    public function testCommandLevelHooksExecute(): void
+    {
+        $commandFile = sys_get_temp_dir() . '/pcmd-cmdhook-' . bin2hex(random_bytes(4)) . '.php';
+        file_put_contents($commandFile, <<<'PHP'
+<?php
+use Pcmd\Support\Command;
+use Pcmd\Context\Context;
+return Command::make()
+    ->description('Cmd hooks')
+    ->before(function (Context $ctx): void {
+        $ctx->line('before');
+    })
+    ->after(function (Context $ctx): void {
+        $ctx->line('after');
+    })
+    ->run(function (Context $ctx): int {
+        $ctx->line('run');
+        return 0;
+    });
+PHP
+        );
+
+        $metadata = new CommandMetadata(
+            name: 'test:cmdhooks',
+            file: $commandFile,
+            environment: 'generic',
+        );
+
+        $resolved = new ResolvedCommand(
+            $metadata,
+            [],
+            [],
+            Environment::generic('/tmp'),
+        );
+
+        $terminal = new Terminal(ansi: false, interactive: false, verbose: false, debug: false);
+        $config = new Config([]);
+
+        $context = new Context(
+            config: $config,
+            terminal: $terminal,
+            environment: Environment::generic('/tmp'),
+            resolvedCommand: $resolved,
+            cwd: '/tmp',
+            home: '/tmp',
+        );
+
+        $executor = new CommandExecutor(new CommandLoader());
+        $exitCode = $executor->execute($resolved, $context);
+
+        $this->assertSame(0, $exitCode);
+
+        unlink($commandFile);
+    }
+
     public function testHooksExecuteInOrder(): void
     {
         $commandFile = sys_get_temp_dir() . '/pcmd-hook-' . bin2hex(random_bytes(4)) . '.php';

@@ -74,7 +74,15 @@ final class CommandExecutor
                 $hook($context);
             }
 
+            foreach ($metadata->getBeforeCallbacks() as $hook) {
+                $hook($context);
+            }
+
             $result = $callable($context);
+
+            foreach ($metadata->getAfterCallbacks() as $hook) {
+                $hook($context);
+            }
 
             foreach ($this->afterHooks as $hook) {
                 $hook($context);

@@ -17,6 +17,14 @@ final class Config
         $this->data = $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
+    public function all(): array
+    {
+        return $this->data;
+    }
+
     public function has(string $key): bool
     {
         return $this->resolve($key) !== null;

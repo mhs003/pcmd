@@ -168,6 +168,15 @@ final class Context
         return $this->terminal->choice($question, $options, $default);
     }
 
+    /**
+     * @param list<string> $options
+     * @return list<string>
+     */
+    public function multichoice(string $question, array $options, ?string $default = null): array
+    {
+        return $this->terminal->multichoice($question, $options, $default);
+    }
+
     public function progress(int $total): \Pcmd\Terminal\ProgressBar
     {
         return new \Pcmd\Terminal\ProgressBar($total);

@@ -37,7 +37,7 @@ This architecture document describes the **target design** for v1.0. Below is th
 | §3 Filesystem | ✅ Implemented | `src/Filesystem/` — Filesystem, Path |
 | §15 Framework Adapter | ✅ Implemented | FrameworkAdapterInterface with boot/shutdown/name; LaravelAdapter implements it |
 | §16 Laravel Adapter | ✅ Implemented | LaravelAdapter with boot, ArtisanBridge, db/cache/config/queue/events/storage/version/environment; 6 example commands shipped |
-| §19 Hook System | ✅ Implemented | HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php |
+| §19 Hook System | ✅ Implemented | HookRunner loads ~/.pcmd/hooks/{before,after,shutdown}.php; Command::before()/after() wired through CommandLoader/Executor |
 | §20 Helper System | ✅ Implemented | HelperLoader loads ~/.pcmd/helpers/ on demand; $ctx->helper('name') access |
 | §21 Plugin Architecture | ✅ Implemented | `src/Plugin/` — PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors |
 | §21 Bundled Commands | ✅ Implemented | resources/commands/ with general + Laravel examples; fallback discovery (user commands win); publish:commands built-in |

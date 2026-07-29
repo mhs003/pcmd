@@ -22,6 +22,10 @@ final class Command
     private bool $hidden = false;
     /** @var callable|null */
     private $runCallback = null;
+    /** @var list<callable> */
+    private array $beforeCallbacks = [];
+    /** @var list<callable> */
+    private array $afterCallbacks = [];
 
     public function description(string $description): self
     {
@@ -133,6 +137,26 @@ final class Command
         return $clone;
     }
 
+    /**
+     * @param callable(Context): mixed $callback
+     */
+    public function before(callable $callback): self
+    {
+        $clone = clone $this;
+        $clone->beforeCallbacks[] = $callback;
+        return $clone;
+    }
+
+    /**
+     * @param callable(Context): mixed $callback
+     */
+    public function after(callable $callback): self
+    {
+        $clone = clone $this;
+        $clone->afterCallbacks[] = $callback;
+        return $clone;
+    }
+
     public function getDescription(): string
     {
         return $this->description;
@@ -189,6 +213,22 @@ final class Command
     public function getRunCallback(): ?callable
     {
         return $this->runCallback;
+    }
+
+    /**
+     * @return list<callable>
+     */
+    public function getBeforeCallbacks(): array
+    {
+        return $this->beforeCallbacks;
+    }
+
+    /**
+     * @return list<callable>
+     */
+    public function getAfterCallbacks(): array
+    {
+        return $this->afterCallbacks;
     }
 
     public static function make(): self

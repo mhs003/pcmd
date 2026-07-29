@@ -156,6 +156,49 @@ final class Terminal
         return $default ?? $options[0] ?? '';
     }
 
+    /**
+     * @param list<string> $options
+     * @return list<string>
+     */
+    public function multichoice(string $question, array $options, ?string $default = null): array
+    {
+        if (!$this->interactive) {
+            if ($default !== null && in_array($default, $options, true)) {
+                return [$default];
+            }
+
+            return [];
+        }
+
+        $this->line($question . ':');
+
+        foreach ($options as $index => $option) {
+            $this->line('  [' . ($index + 1) . '] ' . $option);
+        }
+
+        $answer = $this->ask('Enter numbers (comma-separated)', $default ?? '1');
+
+        $selected = [];
+
+        $parts = explode(',', $answer);
+
+        foreach ($parts as $part) {
+            $part = trim($part);
+
+            if (is_numeric($part)) {
+                $idx = (int) $part - 1;
+
+                if (isset($options[$idx])) {
+                    $selected[] = $options[$idx];
+                }
+            } elseif (in_array($part, $options, true)) {
+                $selected[] = $part;
+            }
+        }
+
+        return $selected;
+    }
+
     public function isAnsi(): bool
     {
         return $this->ansi;

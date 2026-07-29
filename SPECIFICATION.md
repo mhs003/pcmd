@@ -25,9 +25,9 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 | §4 Environment Detection | ✅ Implemented (Generic + Laravel; directory walk-up; plugin detectors) |
 | §5 Command Resolution | ✅ Implemented (normalize, alias, env check, validation, suggestions) |
 | §6 Command Lifecycle | ✅ Implemented (bootstrap, context, hooks, execute, cleanup, exit) |
-| §7 Context API | ✅ Implemented (cwd, root, home, temp, arg, option, terminal, fs, process, log, table, spinner, progress, helper) |
-| §8 Arguments & Options | ✅ Implemented (Argument/Option builders, InputValidator, type/file/regex/validation chain) |
-| §9 Interactive Console | 🔶 Partial (ask/confirm/choice/secret work; tree not implemented) |
+| §7 Context API | ✅ Implemented (cwd, root, home, temp, arg, option, terminal, fs, process, log, table, spinner, progress, helper, multichoice) |
+| §8 Arguments & Options | ✅ Implemented (Argument/Option builders, InputValidator, integer/float/boolean type validation, array argument capture) |
+| §9 Interactive Console | 🔶 Partial (ask/confirm/choice/secret/multichoice work; tree not implemented) |
 | §10 Configuration | ✅ Implemented (immutable, dot-notation, typed getters, ~/.pcmd/config.php) |
 | §11 General Commands | ✅ Implemented (3 bundled example commands: json:pretty, file:hash, git:cleanup) |
 | §12 Laravel Commands | ✅ Implemented (LaravelAdapter, example commands for Eloquent/Artisan/cache/queue, $ctx->laravel() returns adapter) |
@@ -39,7 +39,7 @@ This specification describes the **target behavior** for v1.0. Sections marked b
 | §18 Security | ⚠️ Not audited; basic confirmation in place |
 | §19 Examples | ✅ Implemented (8 bundled example commands shipped in resources/commands/: 3 general + 5 Laravel; publish:commands built-in) |
 | §20 Plugin Architecture | ✅ Implemented (PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors) |
-| §21 Testing | ✅ Implemented (90 unit tests + integration + E2E = 139 tests across 22 files; PHPUnit configured; Unit/Integration/EndToEnd suites) |
+| §21 Testing | ✅ Implemented (158 tests across 23 files; PHPUnit configured; Unit/Integration/EndToEnd suites) |
 | §22 Appendix | ✅ Reserved names and exit codes match implementation |
 
 ---

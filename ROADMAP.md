@@ -47,7 +47,7 @@
 | 25  | Bundled Commands & publish:commands | ✅ Completed (resources/commands/ with 3 general + 5 Laravel example commands; fallback discovery; publish:commands built-in copies to ~/.pcmd/commands/) |
 | 26  | Plugin Architecture | ✅ Completed (PluginManager, PluginLoader, PluginManifest; ~/.pcmd/plugins/ scanned for pcmd.json; plugins contribute commands, hooks, helpers, detectors) |
 | 27  | Testing Infrastructure | ✅ Completed (PHPUnit configured; Unit/Integration/EndToEnd suites; Fixtures directory) |
-| 28  | Comprehensive Unit Tests | 🔶 Partial (22 test files, 139 tests; Filesystem/ConfigLoader/CommandDiscovery/CommandExecutor covered) |
+| 28  | Comprehensive Unit Tests | ✅ Completed (23 test files, 158 tests; command-level hooks, multichoice, input validation types, ConfigCommand added) |
 | 29  | Integration & E2E Tests | ✅ Completed (DiscoveryRegistryTest, ResolverExecutorTest, BuiltinCommandsTest with 8 E2E tests) |
 | 30  | Performance Optimization | ⬜ Not started |
 | 31  | Documentation & Release | ✅ Completed (README, full docs/ folder, CI, LICENSE, CONTRIBUTING, CHANGELOG, SECURITY) |

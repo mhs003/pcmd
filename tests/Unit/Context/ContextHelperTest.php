@@ -94,4 +94,25 @@ final class ContextHelperTest extends TestCase
 
         $this->assertSame(['a', 'b'], $ctx->helpers());
     }
+
+    public function testMultichoiceReturnsEmptyArrayInNonInteractiveMode(): void
+    {
+        $terminal = new Terminal(ansi: false, interactive: false);
+        $config = new Config([]);
+        $environment = Environment::generic('/tmp');
+        $metadata = new CommandMetadata('test', '', '', 'generic');
+        $resolved = new ResolvedCommand($metadata);
+
+        $ctx = new Context(
+            config: $config,
+            terminal: $terminal,
+            environment: $environment,
+            resolvedCommand: $resolved,
+            cwd: '/tmp',
+            home: '/tmp',
+        );
+
+        $result = $ctx->multichoice('Pick', ['a', 'b', 'c']);
+        $this->assertSame([], $result);
+    }
 }

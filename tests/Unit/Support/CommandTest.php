@@ -72,4 +72,40 @@ final class CommandTest extends TestCase
         $this->assertSame('A', $cmd1->getDescription());
         $this->assertSame('B', $cmd2->getDescription());
     }
+
+    public function testBefore(): void
+    {
+        $callback = function () {};
+        $cmd = Command::make()->before($callback);
+        $this->assertSame([$callback], $cmd->getBeforeCallbacks());
+    }
+
+    public function testAfter(): void
+    {
+        $callback = function () {};
+        $cmd = Command::make()->after($callback);
+        $this->assertSame([$callback], $cmd->getAfterCallbacks());
+    }
+
+    public function testBeforeImmutability(): void
+    {
+        $cb1 = function () {};
+        $cb2 = function () {};
+        $cmd1 = Command::make()->before($cb1);
+        $cmd2 = $cmd1->before($cb2);
+
+        $this->assertSame([$cb1], $cmd1->getBeforeCallbacks());
+        $this->assertSame([$cb1, $cb2], $cmd2->getBeforeCallbacks());
+    }
+
+    public function testAfterImmutability(): void
+    {
+        $cb1 = function () {};
+        $cb2 = function () {};
+        $cmd1 = Command::make()->after($cb1);
+        $cmd2 = $cmd1->after($cb2);
+
+        $this->assertSame([$cb1], $cmd1->getAfterCallbacks());
+        $this->assertSame([$cb1, $cb2], $cmd2->getAfterCallbacks());
+    }
 }

@@ -107,5 +107,13 @@ final class CommandLoader
         if ($command->isHidden()) {
             $metadata->setHidden(true);
         }
+
+        if ($command->getBeforeCallbacks() !== []) {
+            $metadata->setBeforeCallbacks($command->getBeforeCallbacks());
+        }
+
+        if ($command->getAfterCallbacks() !== []) {
+            $metadata->setAfterCallbacks($command->getAfterCallbacks());
+        }
     }
 }

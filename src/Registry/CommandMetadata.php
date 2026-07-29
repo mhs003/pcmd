@@ -24,6 +24,10 @@ final class CommandMetadata
     private array $argumentDefinitions = [];
     /** @var list<Option> */
     private array $optionDefinitions = [];
+    /** @var list<callable> */
+    private array $beforeCallbacks = [];
+    /** @var list<callable> */
+    private array $afterCallbacks = [];
 
     /**
      * @param list<string> $aliases
@@ -169,5 +173,37 @@ final class CommandMetadata
     public function setHidden(bool $hidden): void
     {
         $this->hidden = $hidden;
+    }
+
+    /**
+     * @return list<callable>
+     */
+    public function getBeforeCallbacks(): array
+    {
+        return $this->beforeCallbacks;
+    }
+
+    /**
+     * @param list<callable> $callbacks
+     */
+    public function setBeforeCallbacks(array $callbacks): void
+    {
+        $this->beforeCallbacks = $callbacks;
+    }
+
+    /**
+     * @return list<callable>
+     */
+    public function getAfterCallbacks(): array
+    {
+        return $this->afterCallbacks;
+    }
+
+    /**
+     * @param list<callable> $callbacks
+     */
+    public function setAfterCallbacks(array $callbacks): void
+    {
+        $this->afterCallbacks = $callbacks;
     }
 }
